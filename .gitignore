@@ -1,0 +1,14 @@
+/_pgdata/
+
+/_build/
+/cover/
+/deps/
+/doc/
+
+/assets/node_modules/
+/priv/static/
+
+*.ez
+erl_crash.dump
+
+/config/*.secret.exs
