@@ -17,7 +17,7 @@ config :kbf, KbfWeb.Endpoint,
   secret_key_base: "tMKM88ZcFDzDRxypttKZsuoaltVQpQW2wi4eOC1MV3AeraYsqEiHc9U5U2fIwp1D",
   render_errors: [view: KbfWeb.ErrorView, accepts: ~w(html json), layout: false],
   pubsub_server: Kbf.PubSub,
-  live_view: [signing_salt: "Ta5Bo9MO"]
+  live_view: [signing_salt: "UFP6bX4jLFVcZMz7Kuduz6M4JzzOO16N"]
 
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",

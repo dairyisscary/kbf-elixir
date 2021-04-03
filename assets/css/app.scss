@@ -10,3 +10,18 @@ body {
 iframe[hidden] {
   display: none;
 }
+
+.kbf-icon {
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+}
+
+.kbf-main::after {
+  content: "";
+  @apply block pt-5;
+}
+
+@import "./logo.scss";

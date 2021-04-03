@@ -4,6 +4,7 @@ defmodule KbfWeb do
       use Phoenix.Controller, namespace: KbfWeb
 
       import Plug.Conn
+      import Phoenix.LiveView.Controller
 
       alias KbfWeb.Router.Helpers, as: Routes
     end
@@ -15,6 +16,7 @@ defmodule KbfWeb do
         root: "lib/kbf_web/templates",
         namespace: KbfWeb
 
+      import Phoenix.LiveView.Helpers
       import Phoenix.Controller,
         only: [get_flash: 1, get_flash: 2, view_module: 1, view_template: 1]
 
@@ -28,6 +30,7 @@ defmodule KbfWeb do
 
       import Plug.Conn
       import Phoenix.Controller
+      import Phoenix.LiveView.Router
     end
   end
 
@@ -43,6 +46,7 @@ defmodule KbfWeb do
 
       import Phoenix.View
       import KbfWeb.ErrorHelpers
+      import KbfWeb.ComponentHelpers
 
       alias KbfWeb.Router.Helpers, as: Routes
     end

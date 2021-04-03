@@ -5,11 +5,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kim-Butler Finance</title>
     <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/app.css") %>">
+    <link rel="icon" href="<%= Routes.static_path(@conn, "/favicon.png") %>">
   </head>
   <body>
-    <main role="main">
-      <%= @inner_content %>
-    </main>
+    <div class="flex h-screen">
+      <aside class="fixed inset-y-0 z-10 flex flex-col flex-shrink-0 w-64 max-h-screen border-r border-gray-200 shadow-lg lg:z-auto lg:static lg:shadow-none">
+        <a href="/" class="kbf-main-logo-link text-3xl p-5 flex items-center justify-around font-semibold">
+          <div>Kbf</div>
+          <%= main_logo %>
+        </a>
+
+        <nav class="flex flex-col flex-1 p-2 space-y-2">
+          <%= nav_link "Dashboard", to: "/", icon: "home" %>
+          <%= nav_link "Transactions", to: "/transactions", icon: "database" %>
+        </nav>
+      </aside>
+
+      <div class="flex flex-col flex-1 max-h-screen">
+        <header class="flex items-center justify-end border-b border-gray-200 p-2 space-x-2.5">
+          <%= component "icon_circle_button.html", name: "file-plus" %>
+          <%= component "person_circle.html", user: %{first_name: "Eric", last_name: "Kim-Butler"}%>
+        </header>
+
+        <main role="main" class="kbf-main flex flex-shrink-0 flex-col flex-1 overflow-auto p-5 max-h-screen">
+          <%= @inner_content %>
+        </main>
+      </div>
+    </div>
     <script async defer type="text/javascript" src="<%= Routes.static_path(@conn, "/js/app.js") %>"></script>
   </body>
 </html>

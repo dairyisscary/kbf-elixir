@@ -39,7 +39,15 @@ module.exports = (env, options) => {
     },
     plugins: [
       new MiniCssExtractPlugin({ filename: "../css/app.css" }),
-      new CopyWebpackPlugin({ patterns: [{ from: "static/", to: "../" }] }),
+      new CopyWebpackPlugin({
+        patterns: [
+          { from: "static/", to: "../" },
+          {
+            from: "node_modules/feather-icons/dist/feather-sprite.svg",
+            to: "../icon-sprite.svg",
+          },
+        ],
+      }),
     ],
   };
 };

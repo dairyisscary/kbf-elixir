@@ -1,0 +1,1 @@
+<h1 class="text-2xl font-semibold border-b border-gray-200 pb-5 mb-6"><%= @content %></h1>

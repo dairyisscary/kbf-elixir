@@ -1,0 +1,95 @@
+$dot-size: 0.4rem;
+$dot-size-plus-margin: $dot-size + 0.2rem;
+$container-height: 4 * $dot-size;
+$num-dots: 10;
+$time: 1.5s;
+
+.kbf-main-logo {
+  height: $container-height + $dot-size;
+  width: $num-dots * $dot-size-plus-margin;
+  @apply relative;
+}
+
+.kbf-main-logo-dot {
+  &::before,
+  &::after {
+    content: "";
+    animation: $time cubic-bezier(0.42 , 0, 0.58, 1) infinite paused;
+    width: $dot-size;
+    height: $dot-size;
+    @apply inline-block rounded-full absolute;
+  }
+  &::before {
+    animation-name: logo-before-dot;
+    @apply bg-purple-600;
+  }
+  &::after {
+    animation-name: logo-after-dot;
+    @apply bg-green-600;
+  }
+
+  @for $i from 1 through $num-dots {
+    &:nth-child(#{$i}) {
+      &::before,
+      &::after {
+        left: ($i - 1) * $dot-size-plus-margin;
+        animation-delay: $i * -0.89 * $time;
+      }
+    }
+  }
+}
+
+.kbf-main-logo-link:hover {
+  .kbf-main-logo-dot {
+    &::before,
+    &::after {
+      animation-play-state: running;
+    }
+  }
+}
+
+@keyframes logo-before-dot {
+  0% {
+    top: 0;
+    z-index: 1;
+  }
+  25% {
+    transform: scale(1.2);
+    z-index: 1;
+  }
+  50% {
+    top: $container-height;
+    z-index: -1;
+  }
+  75% {
+    transform: scale(0.8);
+    z-index: -1;
+  }
+  100% {
+    top: 0;
+    z-index: -1;
+  }
+}
+
+@keyframes logo-after-dot {
+  0% {
+    top: $container-height;
+    z-index: -1;
+  }
+  25% {
+    transform: scale(0.8);
+    z-index: -1;
+  }
+  50% {
+    top: 0;
+    z-index: 1;
+  }
+  75% {
+    transform: scale(1.2);
+    z-index: 1;
+  }
+  100% {
+    top: $container-height;
+    z-index: 1;
+  }
+}
