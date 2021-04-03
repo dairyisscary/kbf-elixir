@@ -4,7 +4,7 @@ defmodule KbfWeb.LayoutView do
   def main_logo do
     ~E"""
     <div class="kbf-main-logo">
-      <%= for i <- 1..10 do %>
+      <%= for _ <- 1..10 do %>
         <div class="kbf-main-logo-dot"></div>
       <% end %>
     </div>

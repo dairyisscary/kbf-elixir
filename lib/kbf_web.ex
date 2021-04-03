@@ -47,6 +47,7 @@ defmodule KbfWeb do
       import Phoenix.View
       import KbfWeb.ErrorHelpers
       import KbfWeb.ComponentHelpers
+      import KbfWeb.Format
 
       alias KbfWeb.Router.Helpers, as: Routes
     end

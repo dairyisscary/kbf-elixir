@@ -1,0 +1,18 @@
+<table class="min-w-full overflow-x-scroll divide-y-0 divide-gray-200 shadow">
+  <thead class="bg-gray-50">
+    <tr>
+      <%= for heading <- @headings do %>
+        <th scope="col" class="px-6 py-3 text-xs font-medium tracking-wider uppercase text-left text-gray-500"><%= heading %></th>
+      <% end %>
+    </tr>
+  </thead>
+  <tbody class="bg-white divide-y divide-gray-200">
+    <%= for row <- @rows do %>
+      <tr class="transition-all hover:bg-gray-100 hover:shadow-lg">
+        <%= for cell <- row do %>
+          <td class="px-6 py-4 whitespace-nowrap"><%= cell %></td>
+        <% end %>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

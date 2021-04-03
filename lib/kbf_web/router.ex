@@ -12,7 +12,8 @@ defmodule KbfWeb.Router do
   scope "/", KbfWeb do
     pipe_through :browser
 
-    get "/", TransactionController, :index
+    get "/", TransactionController, :dashboard_index
+    get "/transactions", TransactionController, :index
   end
 
   if Mix.env() in [:dev, :test] do

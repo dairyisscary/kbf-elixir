@@ -12,7 +12,7 @@
       <aside class="fixed inset-y-0 z-10 flex flex-col flex-shrink-0 w-64 max-h-screen border-r border-gray-200 shadow-lg lg:z-auto lg:static lg:shadow-none">
         <a href="/" class="kbf-main-logo-link text-3xl p-5 flex items-center justify-around font-semibold">
           <div>Kbf</div>
-          <%= main_logo %>
+          <%= main_logo() %>
         </a>
 
         <nav class="flex flex-col flex-1 p-2 space-y-2">

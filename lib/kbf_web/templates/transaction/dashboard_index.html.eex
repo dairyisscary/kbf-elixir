@@ -1,0 +1,11 @@
+<%= component "main_content_header.html", content: "Dashboard" %>
+
+<section class="grid grid-cols-1 gap-5 mb-6 sm:grid-cols-2 lg:grid-cols-4">
+  <%= dash_pill "Recent Transactions", value: length(@recent_transactions) |> format_int(), icon_name: "clock" %>
+  <%= dash_pill "Recent Spend", value: sum_spend(@recent_transactions) |> format_currency(), icon_name: "dollar-sign" %>
+  <%= dash_pill "Recent Income", value: sum_income(@recent_transactions) |> format_currency(), icon_name: "dollar-sign" %>
+  <%= dash_pill "Total Transactions", value: @total_transaction_count, icon_name: "layers" %>
+</section>
+
+<%= component "sub_header.html", content: "Recent Transactions" %>
+<%= component "table.html", headings: ["Description", "Amount", "Date"], rows: transaction_table_rows(@recent_transactions) %>

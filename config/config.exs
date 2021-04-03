@@ -1,5 +1,7 @@
 use Mix.Config
 
+config :elixir, :time_zone_database, Tzdata.TimeZoneDatabase
+
 config :kbf,
   ecto_repos: [Kbf.Repo]
 
