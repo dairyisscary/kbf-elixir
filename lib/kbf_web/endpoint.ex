@@ -12,9 +12,8 @@ defmodule KbfWeb.Endpoint do
   plug Plug.Static,
     at: "/",
     from: :kbf,
-    # TODO true in production?
-    gzip: false,
-    only: ~w(css fonts images js icon-sprite.svg favicon.png)
+    gzip: true,
+    only_matching: ~w(css fonts images js icon-sprite.svg favicon)
 
   if code_reloading? do
     socket "/phoenix/live_reload/socket", Phoenix.LiveReloader.Socket

@@ -1,0 +1,7 @@
+/_pgdata/
+/_build/
+/deps/
+/doc/
+
+/assets/node_modules/
+/priv/static/

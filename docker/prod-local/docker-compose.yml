@@ -4,9 +4,9 @@ services:
   postgres:
     build:
       context: "."
-      dockerfile: postgres/Dockerfile
-    image: dairyisscary/kbf-postgres:dev
-    container_name: kbf_pg
+      dockerfile: "../dev/postgres/Dockerfile"
+    image: dairyisscary/kbf-postgres:prod-local
+    container_name: kbf_pg_prod_local
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
@@ -18,23 +18,19 @@ services:
     ports:
       - "4001:5432"
     volumes:
-      - "../../_pgdata:/var/lib/postgresql/data"
+      - "/Users/eric/kbf-prod-data:/var/lib/postgresql/data"
 
   kbf:
     build:
       context: "../../"
-      dockerfile: docker/dev/kbf/Dockerfile
-    image: dairyisscary/kbf:dev
+      dockerfile: "docker/prod/kbf/Dockerfile"
+    image: "dairyisscary/kbf:${KBF_RELEASE}"
+    container_name: kbf_prod_local
     environment:
-      NODE_ENV: development
-    command: mix phx.server
-    container_name: kbf
+      HTTP_HOST: kbf.local
     links:
       - postgres
     depends_on:
       - postgres
     ports:
-      - "4000:4000"
-    working_dir: /opt/kbf
-    volumes:
-      - "../../:/opt/kbf"
+      - "80:4000"
