@@ -8,4 +8,5 @@
 </section>
 
 <%= component "sub_header.html", content: "Recent Transactions" %>
-<%= component "table.html", headings: ["Description", "Amount", "Date"], rows: transaction_table_rows(@recent_transactions) %>
+
+<%= live_component @socket, KbfWeb.Transaction.TableComponent, transactions: @recent_transactions %>

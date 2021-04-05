@@ -1,3 +1,0 @@
-<%= component "main_content_header.html", content: "All Transactions" %>
-
-<%= component "table.html", headings: ["Description", "Amount", "Date"], rows: transaction_table_rows(@transactions) %>

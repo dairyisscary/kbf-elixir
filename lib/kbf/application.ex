@@ -13,8 +13,6 @@ defmodule Kbf.Application do
       {Phoenix.PubSub, name: Kbf.PubSub},
       # Start the Endpoint (http/https)
       KbfWeb.Endpoint
-      # Start a worker by calling: Kbf.Worker.start_link(arg)
-      # {Kbf.Worker, arg}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

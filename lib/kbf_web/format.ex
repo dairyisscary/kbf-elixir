@@ -8,7 +8,7 @@ defmodule KbfWeb.Format do
     Number.Currency.number_to_currency(number)
   end
 
-  def format_date(nil), do: nil
+  def format_date(nil), do: ""
 
   def format_date(date) do
     day_of_month = Number.Human.number_to_ordinal(date.day)

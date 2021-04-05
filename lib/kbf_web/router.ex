@@ -7,13 +7,14 @@ defmodule KbfWeb.Router do
     plug :fetch_live_flash
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug :put_root_layout, {KbfWeb.LayoutView, :root}
   end
 
   scope "/", KbfWeb do
     pipe_through :browser
 
-    get "/", TransactionController, :dashboard_index
-    get "/transactions", TransactionController, :index
+    live "/", Transaction.DashboardLive
+    live "/transactions", Transaction.ListingLive
   end
 
   if Mix.env() in [:dev, :test] do

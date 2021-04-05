@@ -1,5 +1,7 @@
-defmodule KbfWeb.TransactionView do
-  use KbfWeb, :view
+defmodule KbfWeb.Transaction do
+  use KbfWeb.HTML
+
+  import KbfWeb.ComponentHelpers
 
   def sum_spend(transactions) do
     sum_with_filter(transactions, &(&1 < 0))
@@ -25,15 +27,18 @@ defmodule KbfWeb.TransactionView do
     """
   end
 
-  def transaction_table_rows(transactions) do
-    transactions
+  def update_single_transaction(old_transactions, updated_transaction) do
+    updated_id = updated_transaction.id
+
+    old_transactions
     |> Enum.map(fn transaction ->
-      [
-        transaction.description,
-        component("currency_pill.html", value: transaction.amount),
-        transaction.when |> format_date()
-      ]
+      if transaction.id === updated_id, do: updated_transaction, else: transaction
     end)
+  end
+
+  def sort_by_when(transactions) do
+    transactions
+    |> Enum.sort_by(& &1.when, &>=/2)
   end
 
   defp sum_with_filter(transactions, filter_fn) do

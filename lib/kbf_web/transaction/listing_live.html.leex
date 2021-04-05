@@ -1,0 +1,3 @@
+<%= component "main_content_header.html", content: "All Transactions" %>
+
+<%= live_component @socket, KbfWeb.Transaction.TableComponent, transactions: @transactions %>

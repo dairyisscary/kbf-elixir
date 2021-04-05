@@ -1,0 +1,30 @@
+<div class="flex h-screen">
+  <aside class="fixed inset-y-0 z-10 flex flex-col flex-shrink-0 w-64 max-h-screen border-r border-gray-200 shadow-lg lg:z-auto lg:static lg:shadow-none">
+    <%= live_patch to: "/", class: "kbf-main-logo-link text-3xl p-5 flex items-center justify-around font-semibold" do %>
+      <span>Kbf</span>
+      <%= main_logo() %>
+    <% end %>
+
+    <nav class="flex flex-col flex-1 p-2 space-y-2">
+      <%= nav_link "Dashboard", to: "/", icon: "home" %>
+      <%= nav_link "Transactions", to: "/transactions", icon: "database" %>
+    </nav>
+  </aside>
+
+  <div class="flex flex-col flex-1 max-h-screen">
+    <header class="flex items-center justify-end border-b border-gray-200 p-2 space-x-2.5">
+      <%= component "icon_circle_button.html", name: "file-plus", phx_click: "add_transaction" %>
+      <%= component "person_circle.html", user: %{first_name: "Eric", last_name: "Kim-Butler"}%>
+    </header>
+
+    <main role="main" class="kbf-main flex flex-shrink-0 flex-col flex-1 overflow-auto p-5 max-h-screen">
+      <%= @inner_content %>
+    </main>
+  </div>
+</div>
+
+<%= if assigns[:edit_transaction_for_modal] do %>
+  <%= live_component @socket, KbfWeb.Transaction.EditModalComponent,
+      id: @edit_transaction_for_modal.id || "new_transaction",
+      transaction: @edit_transaction_for_modal %>
+<% end %>

@@ -8,11 +8,11 @@
   </thead>
   <tbody class="bg-white divide-y divide-gray-200">
     <%= for row <- @rows do %>
-      <tr class="transition-all hover:bg-gray-100 hover:shadow-lg">
-        <%= for cell <- row do %>
+      <%= content_tag :tr, table_tr_opts(row) do %>
+        <%= for cell <- row[:do] do %>
           <td class="px-6 py-4 whitespace-nowrap"><%= cell %></td>
         <% end %>
-      </tr>
+      <% end %>
     <% end %>
   </tbody>
 </table>

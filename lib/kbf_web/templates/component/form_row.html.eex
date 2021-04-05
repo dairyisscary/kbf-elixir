@@ -1,0 +1,5 @@
+<div class="kbf-form-row mb-5">
+  <%= label @form, @field, class: "text-sm font-medium mb-2" %>
+  <%= assigns.do %> 
+  <%= error_tags @form, @field %>
+</div>

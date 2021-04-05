@@ -11,12 +11,27 @@ iframe[hidden] {
   display: none;
 }
 
+.kbf-form-row {
+  > * {
+    @apply block;
+  }
+}
+
 .kbf-icon {
   stroke: currentColor;
   stroke-width: 2;
   stroke-linecap: round;
   stroke-linejoin: round;
   fill: none;
+}
+
+.kbf-feedback {
+  &::before {
+    content: "\feff";
+  }
+  &.phx-no-feedback {
+    @apply invisible;
+  }
 }
 
 .kbf-main::after {

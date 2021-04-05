@@ -7,8 +7,7 @@ defmodule KbfWeb.Endpoint do
     signing_salt: "vrlDC0YaqOUfgWAo7JD8wgkdW95yR+wQ"
   ]
 
-  socket "/live", Phoenix.LiveView.Socket,
-    websocket: [connect_info: [session: @session_options]]
+  socket "/live", Phoenix.LiveView.Socket, websocket: [connect_info: [session: @session_options]]
 
   plug Plug.Static,
     at: "/",
