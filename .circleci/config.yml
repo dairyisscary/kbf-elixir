@@ -1,0 +1,91 @@
+version: 2.1
+
+commands:
+  attach_made_workspace:
+    description: Attach workspace generated files from another job
+    steps:
+      - attach_workspace:
+          at: /root
+
+executors:
+  default_env_with_db:
+    working_directory: /root/kbf
+    docker:
+      - image: elixir:1.11.4
+        environment:
+          MIX_ENV: test
+          MIX_HOME: /root/kbf/.mix
+          DB_HOST: localhost
+      - image: postgres:13.2
+        environment:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+
+  default_env:
+    working_directory: /root/kbf
+    docker:
+      - image: elixir:1.11.4
+        environment:
+          MIX_ENV: test
+          MIX_HOME: /root/kbf/.mix
+
+jobs:
+  build_elixir_working_directory:
+    executor: default_env
+    steps:
+      - checkout
+      - run:
+          name: Install Hex and Rebar
+          command: mix local.hex --force && mix local.rebar --force
+      - restore_cache:
+          name: Restoring Mix Cache
+          keys:
+            - mix-cache-{{ .Branch }}-{{ checksum "mix.lock" }}
+            - mix-cache-{{ .Branch }}
+            - mix-cache
+      - restore_cache:
+          name: Restoring Elixir Build/Compile Cache
+          keys:
+            - elixir-build-cache-{{ .Branch }}
+            - elixir-build-cache
+      - run:
+          name: Install Dependencies and Compile
+          command: mix do deps.get, compile
+      - save_cache:
+          key: elixir-build-cache-{{ .Branch }}
+          paths: _build
+      - save_cache:
+          key: mix-cache-{{ .Branch }}-{{ checksum "mix.lock" }}
+          paths: deps
+      - persist_to_workspace:
+          root: /root
+          paths:
+            - kbf
+
+  format_elixir:
+    executor: default_env
+    steps:
+      - attach_made_workspace
+      - run:
+          name: Checking Formatting
+          command: mix format --check-formatted --dry-run
+
+  test_elixir:
+    executor: default_env_with_db
+    steps:
+      - attach_made_workspace
+      - run:
+          name: Running Tests
+          command: mix test --max-cases 4
+
+workflows:
+  version: 2
+  Everything:
+    jobs:
+      - build_elixir_working_directory
+      - format_elixir:
+          requires:
+            - build_elixir_working_directory
+      - test_elixir:
+          requires:
+            - build_elixir_working_directory
