@@ -39,6 +39,7 @@ defmodule Kbf.MixProject do
       {:jason, "~> 1.0"},
       {:number, "~> 1.0.3"},
       {:tzdata, "~> 1.1.0"},
+      {:pbkdf2_elixir, "~> 1.4.0"},
       {:plug_cowboy, "~> 2.0"}
     ]
   end

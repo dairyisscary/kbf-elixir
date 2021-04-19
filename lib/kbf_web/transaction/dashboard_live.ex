@@ -5,12 +5,13 @@ defmodule KbfWeb.Transaction.DashboardLive do
   @recent_day_cutoff 10
 
   @impl true
-  def mount(_params, _session, socket) do
+  def mount(_params, session, socket) do
     if connected?(socket), do: Kbf.Transaction.subscribe()
 
     socket =
       assign(socket,
         page_title: "To the Moon!",
+        user: KbfWeb.Session.get_user_from_socket_session!(session),
         total_transaction_count: Kbf.Transaction.total_count(),
         recent_transactions:
           Kbf.Transaction.newer_than_n_days_ago(@recent_day_cutoff)

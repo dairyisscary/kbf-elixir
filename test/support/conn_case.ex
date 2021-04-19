@@ -2,17 +2,6 @@ defmodule KbfWeb.ConnCase do
   @moduledoc """
   This module defines the test case to be used by
   tests that require setting up a connection.
-
-  Such tests rely on `Phoenix.ConnTest` and also
-  import other functionality to make it easier
-  to build common data structures and query the data layer.
-
-  Finally, if the test case interacts with the database,
-  we enable the SQL sandbox, so changes done to the database
-  are reverted at the end of every test. If you are using
-  PostgreSQL, you can even run database tests asynchronously
-  by setting `use KbfWeb.ConnCase, async: true`, although
-  this option is not recommended for other databases.
   """
 
   use ExUnit.CaseTemplate
@@ -38,6 +27,26 @@ defmodule KbfWeb.ConnCase do
       Ecto.Adapters.SQL.Sandbox.mode(Kbf.Repo, {:shared, self()})
     end
 
-    {:ok, conn: Phoenix.ConnTest.build_conn()}
+    conn = Phoenix.ConnTest.build_conn()
+
+    conn =
+      unless tags[:without_user] do
+        conn_with_user(conn)
+      else
+        conn
+      end
+
+    {:ok, conn: conn}
+  end
+
+  def conn_with_user(conn) do
+    %{password_hash: password_hash} = Pbkdf2.add_hash("password")
+
+    user = Kbf.Repo.insert!(%Kbf.Account{username: "test_user", password_hash: password_hash})
+
+    now_in_seconds = DateTime.utc_now() |> DateTime.to_unix()
+
+    conn
+    |> Plug.Test.init_test_session(user_id: user.id, expires_at: now_in_seconds + 24 * 60 * 60)
   end
 end

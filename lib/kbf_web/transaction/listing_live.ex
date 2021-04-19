@@ -4,12 +4,13 @@ defmodule KbfWeb.Transaction.ListingLive do
   @day_cutoff 30
 
   @impl true
-  def mount(_params, _session, socket) do
+  def mount(_params, session, socket) do
     if connected?(socket), do: Kbf.Transaction.subscribe()
 
     socket =
       assign(socket,
         page_title: "All Transactions",
+        user: KbfWeb.Session.get_user_from_socket_session!(session),
         transactions:
           Kbf.Transaction.newer_than_n_days_ago(@day_cutoff)
           |> KbfWeb.Transaction.sort_by_when()

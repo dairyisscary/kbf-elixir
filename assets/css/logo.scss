@@ -7,6 +7,7 @@ $time: 1.5s;
 .kbf-main-logo {
   height: $container-height + $dot-size;
   width: $num-dots * $dot-size-plus-margin;
+  z-index: 1;
   @apply relative;
 }
 
@@ -39,7 +40,8 @@ $time: 1.5s;
   }
 }
 
-.kbf-main-logo-link:hover {
+.kbf-main-logo-container-running,
+.kbf-main-logo-container:hover {
   .kbf-main-logo-dot {
     &::before,
     &::after {

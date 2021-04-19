@@ -1,6 +1,6 @@
 <%= component "modal.html", backdrop_attrs: [phx_target: @myself, phx_click: :cancel] do %>
-  <%= form_for @changeset, "#", [phx_target: @myself, phx_change: :validate, phx_submit: :save, class: "w-96"], fn form -> %>
-    <div class="px-4 py-3">
+  <%= form = form_for @changeset, "#", [phx_target: @myself, phx_change: :validate, phx_submit: :save] %>
+    <div class="px-6 pt-5">
       <%= component "sub_header.html", content: "Edit Transaction" %>
 
       <%= component "form_row.html", form: form, field: :description do %>
@@ -15,9 +15,9 @@
         <%= date_input form, :when %>
       <% end %>
     </div>
-    <div class="bg-gray-50 space-x-3 px-4 py-3 flex items-center justify-end">
+    <div class="bg-gray-100 space-x-4 px-6 py-5 flex items-center justify-end">
       <%= component "button.html", phx_target: @myself, phx_click: :cancel, do: "Cancel" %>
       <%= component "button.html", type: :submit, button_style: :confirm, phx_disable_with: "Saving...", do: "Save" %>
     </div>
-  <% end %>
+  </form>
 <% end %>

@@ -1,4 +1,8 @@
 defmodule KbfWeb.ComponentHelpers do
+  def component(template) do
+    KbfWeb.ComponentView.render(template, [])
+  end
+
   def component(template, assigns) do
     KbfWeb.ComponentView.render(template, assigns)
   end

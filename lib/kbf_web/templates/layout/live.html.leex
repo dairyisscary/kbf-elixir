@@ -1,8 +1,7 @@
 <div class="flex h-screen">
   <aside class="fixed inset-y-0 z-10 flex flex-col flex-shrink-0 w-64 max-h-screen border-r border-gray-200 shadow-lg lg:z-auto lg:static lg:shadow-none">
-    <%= live_patch to: "/", class: "kbf-main-logo-link text-3xl p-5 flex items-center justify-around font-semibold" do %>
-      <span>Kbf</span>
-      <%= main_logo() %>
+    <%= live_patch to: "/", class: "kbf-main-logo-container text-3xl p-5 flex items-center justify-around font-semibold" do %>
+      <%= component "main_logo.html" %>
     <% end %>
 
     <nav class="flex flex-col flex-1 p-2 space-y-2">
@@ -14,7 +13,20 @@
   <div class="flex flex-col flex-1 max-h-screen">
     <header class="flex items-center justify-end border-b border-gray-200 p-2 space-x-2.5">
       <%= component "icon_circle_button.html", name: "file-plus", phx_click: "add_transaction" %>
-      <%= component "person_circle.html", user: %{first_name: "Eric", last_name: "Kim-Butler"}%>
+      <div class="group relative">
+        <button type="button">
+          <%= component "person_circle.html", user: @user %>
+        </button>
+        <ul style="min-width: 8rem" class="absolute hidden group-hover:block shadow-md rounded border right-0 bg-white">
+          <li>
+            <%= link "Logout",
+                to: Routes.account_path(@socket, :end_session),
+                class: "py-3 px-4 block hover:bg-gray-100",
+                method: "POST"
+            %>
+          </li>
+        </ul>
+      </div>
     </header>
 
     <main role="main" class="kbf-main flex flex-shrink-0 flex-col flex-1 overflow-auto p-5 max-h-screen">

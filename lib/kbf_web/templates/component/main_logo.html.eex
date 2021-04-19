@@ -1,0 +1,6 @@
+<span><%= assigns[:text] || "Kbf" %></span>
+<span class="kbf-main-logo">
+  <%= for _ <- 1..10 do %>
+    <span class="kbf-main-logo-dot"></span>
+  <% end %>
+</span>

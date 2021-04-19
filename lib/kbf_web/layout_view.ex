@@ -3,16 +3,6 @@ defmodule KbfWeb.LayoutView do
 
   @edit_modal_key :edit_transaction_for_modal
 
-  def main_logo do
-    ~E"""
-    <span class="kbf-main-logo">
-      <%= for _ <- 1..10 do %>
-        <span class="kbf-main-logo-dot"></span>
-      <% end %>
-    </span>
-    """
-  end
-
   def nav_link(content, to: to, icon: icon) do
     ~E"""
     <%= live_patch to: to, class: "flex items-center transition-colors space-x-2 p-2 rounded-md hover:bg-gray-100" do %>

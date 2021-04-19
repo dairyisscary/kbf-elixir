@@ -24,7 +24,10 @@ defmodule KbfWeb.Transaction.EditModalComponent do
         {:noreply, send_close(socket, updated_transaction)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        {:noreply, socket |> put_flash(:error, "Could not save transaction.") |> assign(:changeset, changeset)}
+        {:noreply,
+         socket
+         |> put_flash(:error, "Could not save transaction.")
+         |> assign(:changeset, changeset)}
     end
   end
 
