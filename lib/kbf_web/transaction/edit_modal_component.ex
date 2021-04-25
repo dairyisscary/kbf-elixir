@@ -20,8 +20,8 @@ defmodule KbfWeb.Transaction.EditModalComponent do
       end
 
     case operation do
-      {:ok, updated_transaction} ->
-        {:noreply, send_close(socket, updated_transaction)}
+      {:ok, _updated_transaction} ->
+        {:noreply, send_close(socket, true)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply,
@@ -32,7 +32,7 @@ defmodule KbfWeb.Transaction.EditModalComponent do
   end
 
   def handle_event("cancel", _payload, socket) do
-    {:noreply, send_close(socket, socket.assigns.transaction)}
+    {:noreply, send_close(socket, false)}
   end
 
   def handle_event("validate", %{"transaction" => transaction_params}, socket) do
@@ -43,8 +43,8 @@ defmodule KbfWeb.Transaction.EditModalComponent do
     {:noreply, assign(socket, changeset: updated_changeset)}
   end
 
-  defp send_close(socket, transaction) do
-    send(self(), {KbfWeb.Transaction.EditModalComponent, :close, transaction.id})
+  defp send_close(socket, is_updated) do
+    send(self(), {KbfWeb.Transaction.EditModalComponent, :close, is_updated})
 
     socket
   end

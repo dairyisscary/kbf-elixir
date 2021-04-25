@@ -47,8 +47,26 @@ defmodule KbfWeb.Transaction.ListingLive do
     {:noreply, new_socket}
   end
 
-  def handle_info({KbfWeb.Transaction.EditModalComponent, :close, _id}, socket) do
-    {:noreply, KbfWeb.LayoutView.live_unassign_edit_modal(socket)}
+  def handle_info({KbfWeb.Transaction.EditModalComponent, :close, is_updated}, socket) do
+    socket = KbfWeb.LayoutView.live_unassign_edit_modal(socket)
+
+    socket =
+      if is_updated do
+        KbfWeb.LayoutView.put_temporary_flash(
+          socket,
+          :info,
+          "Saved transaction successfully.",
+          :clear_flash
+        )
+      else
+        socket
+      end
+
+    {:noreply, socket}
+  end
+
+  def handle_info(:clear_flash, socket) do
+    {:noreply, clear_flash(socket)}
   end
 
   @impl true

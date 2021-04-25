@@ -17,7 +17,7 @@
         <button type="button">
           <%= component "person_circle.html", user: @user %>
         </button>
-        <ul style="min-width: 8rem" class="absolute hidden group-hover:block shadow-md rounded border right-0 bg-white">
+        <ul style="min-width: 8rem" class="absolute hidden group-hover:block shadow-md rounded-sm border right-0 bg-white">
           <li>
             <%= link "Logout",
                 to: Routes.account_path(@socket, :end_session),
@@ -34,6 +34,8 @@
     </main>
   </div>
 </div>
+
+<%= flash_alerts(@flash) %>
 
 <%= if assigns[:edit_transaction_for_modal] do %>
   <%= live_component @socket, KbfWeb.Transaction.EditModalComponent,
