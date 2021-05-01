@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 body {
-  @apply bg-white;
+  @apply bg-white text-gray-800;
 }
 
 /* Phoenix live reload iframe */
@@ -12,7 +12,7 @@ iframe[hidden] {
 }
 
 .kbf-form-row {
-  > * {
+  > *:not(.flex) {
     @apply block;
   }
 }

@@ -5,14 +5,17 @@
     <% end %>
 
     <nav class="flex flex-col flex-1 p-2 space-y-2">
-      <%= nav_link "Dashboard", to: "/", icon: "home" %>
+      <%= nav_link "Dashboard", to: "/", icon: "activity" %>
       <%= nav_link "Transactions", to: "/transactions", icon: "database" %>
+      <%= nav_link "Categories", to: "/categories", icon: "layers" %>
     </nav>
   </aside>
 
   <div class="flex flex-col flex-1 max-h-screen">
     <header class="flex items-center justify-end border-b border-gray-200 p-2 space-x-2.5">
-      <%= component "icon_circle_button.html", name: "file-plus", phx_click: "add_transaction" %>
+      <%= unless assigns[:transaction_add_opt_out] do %>
+        <%= component "icon_circle_button.html", name: "file-plus", phx_click: "add_transaction" %>
+      <% end %>
       <div class="group relative">
         <button type="button">
           <%= component "person_circle.html", user: @user %>
@@ -40,5 +43,6 @@
 <%= if assigns[:edit_transaction_for_modal] do %>
   <%= live_component @socket, KbfWeb.Transaction.EditModalComponent,
       id: @edit_transaction_for_modal.id || "new_transaction",
+      categories: @edit_modal_categories,
       transaction: @edit_transaction_for_modal %>
 <% end %>

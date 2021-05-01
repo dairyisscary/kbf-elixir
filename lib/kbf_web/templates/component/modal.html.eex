@@ -1,12 +1,11 @@
 <div class="fixed z-10 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-  <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20">
-
+  <div class="flex items-center justify-center min-h-screen px-4 py-12">
 <%= 
 new_attrs = assigns[:backdrop_attrs] || []
 cursor_class = if Keyword.has_key?(new_attrs, :phx_click), do: "cursor-pointer ", else: ""
 div_attrs = Keyword.merge(
   [
-    class: "#{cursor_class}fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity",
+    class: "#{cursor_class}fixed inset-0 bg-gray-500 bg-opacity-75",
     aria_hidden: :true
   ],
   new_attrs
@@ -14,7 +13,7 @@ div_attrs = Keyword.merge(
 content_tag(:div, div_attrs, do: "")
 %>
 
-    <div class="bg-white w-full max-w-md rounded-lg overflow-hidden shadow-xl transform transition-all">
+    <div class="bg-white w-full max-w-lg rounded-lg overflow-hidden shadow-xl transform transition-all">
       <%= assigns.do %>
     </div>
 

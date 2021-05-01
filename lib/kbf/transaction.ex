@@ -4,6 +4,8 @@ defmodule Kbf.Transaction do
   import Ecto.Query
   alias Kbf.Repo
 
+  @default_select [:id, :description, :when, :amount]
+
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
   schema "transactions" do
@@ -11,12 +13,17 @@ defmodule Kbf.Transaction do
     field :description, :string
     field :when, :date
 
+    many_to_many :categories, Kbf.Category,
+      join_through: "categories_transactions",
+      on_replace: :delete
+
     timestamps()
   end
 
   def newer_than_n_days_ago(days) do
     from(t in Kbf.Transaction,
-      select: ^default_select(),
+      select: ^@default_select,
+      preload: [categories: ^Kbf.Category.all_by_name_preload()],
       where: t.when >= ^days_ago(days) or is_nil(t.when)
     )
     |> Repo.all()
@@ -36,10 +43,11 @@ defmodule Kbf.Transaction do
     transaction
     |> cast(attrs, [:description, :amount, :when])
     |> validate_required([:description, :amount])
+    |> put_assoc(:categories, attrs["categories"])
   end
 
   def new() do
-    %Kbf.Transaction{when: Date.utc_today()}
+    %Kbf.Transaction{when: Date.utc_today(), categories: []}
   end
 
   def create(attrs) do
@@ -70,9 +78,5 @@ defmodule Kbf.Transaction do
     Phoenix.PubSub.broadcast(Kbf.PubSub, "transactions", {event, transaction})
 
     success
-  end
-
-  defp default_select() do
-    [:id, :description, :when, :amount]
   end
 end

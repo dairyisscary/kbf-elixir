@@ -1,0 +1,62 @@
+<%= component "main_content_header.html", content: header_with_add_button() %>
+
+<%= component "table.html",
+  headings: ["Name", "Color", "Transaction Count"],
+  rows: Enum.map(@categories, &category_table_row/1)
+%>
+
+<%= if @edit_modal_changeset do %>
+  <% editing_category = get_editing_category(@edit_modal_changeset) %>
+  <%= component "modal.html", backdrop_attrs: [phx_click: :cancel_modal], post_script: unless(@delete_confirm_open, do: KbfWeb.LayoutView.flash_alerts(@flash)) do %>
+    <%= form = form_for @edit_modal_changeset, "#", [phx_change: :validate, phx_submit: :save_category] %>
+      <div class="px-6 pt-5">
+        <%= component "sub_header.html", content: "Add Category" %>
+
+        <%= component "form_row.html", form: form, field: :name do %>
+          <%= text_input form, :name %>
+        <% end %>
+
+        <%= component "form_row.html", form: form, field: :color_code do %>
+          <%= hidden_input form, :color_code %>
+          <div class="flex flex-wrap gap-2">
+            <%=
+              cur_code = "#{input_value(form, :color_code)}"
+
+              KbfWeb.Category.all_bg_color_classes(fn code ->
+                code = "#{code}"
+
+                if code == cur_code do
+                  [do: component("icon.html", name: "check", class: "w-4 h-4")]
+                else
+                  [phx_click: :select_code, phx_value_color_code: code, class: "cursor-pointer"]
+                end
+              end)
+            %>
+          </div>
+        <% end %>
+      </div>
+      <footer class="bg-gray-100 space-x-4 px-6 py-5 flex items-center justify-end">
+        <%= if editing_category do %>
+          <%= component "button.html", phx_click: :open_delete_modal, class: "mr-auto", do: component("icon.html", name: "trash") %>
+        <% end %>
+        <%= component "button.html", phx_click: :cancel_modal, do: "Cancel" %>
+        <%= component "button.html", type: :submit, button_style: :confirm, phx_disable_with: "Saving...", do: "Save" %>
+      </footer>
+    </form>
+  <% end %>
+
+  <%= if @delete_confirm_open do %>
+    <%= component "modal.html", backdrop_attrs: [phx_click: :cancel_delete_modal], post_script: KbfWeb.LayoutView.flash_alerts(@flash) do %>
+      <div class="px-6 py-5">
+        <%= component "sub_header.html", content: "Are you sure you want to delete category \"#{editing_category.name}\"" %>
+        <p>This cannot be undone and you will lose all associations between this category and its transactions.</p>
+      </div>
+      <footer class="bg-gray-100 space-x-4 px-6 py-5 flex items-center justify-end">
+        <%= component "button.html", phx_click: :cancel_delete_modal, do: "Cancel" %>
+        <%= component "button.html", phx_click: :delete_category, button_style: :warning, do: "Delete" %>
+      </footer>
+    <% end %>
+  <% end %>
+<% else %>
+  <%= KbfWeb.LayoutView.flash_alerts(@flash) %>
+<% end %>

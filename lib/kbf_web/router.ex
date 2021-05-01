@@ -31,6 +31,7 @@ defmodule KbfWeb.Router do
 
     live "/", Transaction.DashboardLive
     live "/transactions", Transaction.ListingLive
+    live "/categories", Category.ListingLive
     post "/end-session", Account.Controller, :end_session, as: :account
     live_dashboard "/dashboard", metrics: KbfWeb.Telemetry
   end

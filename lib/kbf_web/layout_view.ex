@@ -2,6 +2,7 @@ defmodule KbfWeb.LayoutView do
   use KbfWeb, :view
 
   @edit_modal_key :edit_transaction_for_modal
+  @edit_modal_categories_key :edit_modal_categories
 
   def nav_link(content, to: to, icon: icon) do
     ~E"""
@@ -44,16 +45,22 @@ defmodule KbfWeb.LayoutView do
     """
   end
 
-  def live_assign_edit_modal(socket, transaction) do
-    Phoenix.LiveView.assign(socket, @edit_modal_key, transaction)
+  def live_assign_edit_modal(socket, %{categories: categories, transaction: transaction}) do
+    Phoenix.LiveView.assign(socket, %{
+      @edit_modal_key => transaction,
+      @edit_modal_categories_key => categories
+    })
   end
 
-  def live_assign_add_modal(socket) do
-    Phoenix.LiveView.assign(socket, @edit_modal_key, Kbf.Transaction.new())
+  def live_assign_add_modal(socket, %{categories: categories}) do
+    Phoenix.LiveView.assign(socket, %{
+      @edit_modal_key => Kbf.Transaction.new(),
+      @edit_modal_categories_key => categories
+    })
   end
 
   def live_unassign_edit_modal(socket) do
-    Phoenix.LiveView.assign(socket, @edit_modal_key, nil)
+    Phoenix.LiveView.assign(socket, %{@edit_modal_key => nil, @edit_modal_categories_key => nil})
   end
 
   def put_temporary_flash(socket, flash_kind, flash_message, proc_message) do

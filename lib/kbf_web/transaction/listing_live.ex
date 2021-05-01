@@ -11,6 +11,7 @@ defmodule KbfWeb.Transaction.ListingLive do
       assign(socket,
         page_title: "All Transactions",
         user: KbfWeb.Session.get_user_from_socket_session!(session),
+        all_categories: Kbf.Category.all_by_name(),
         transactions:
           Kbf.Transaction.newer_than_n_days_ago(@day_cutoff)
           |> KbfWeb.Transaction.sort_by_when()
@@ -72,10 +73,16 @@ defmodule KbfWeb.Transaction.ListingLive do
   @impl true
   def handle_event("edit_transaction", %{"id" => id}, socket) do
     transaction = Enum.find(socket.assigns.transactions, &(&1.id == id))
-    {:noreply, KbfWeb.LayoutView.live_assign_edit_modal(socket, transaction)}
+
+    {:noreply,
+     KbfWeb.LayoutView.live_assign_edit_modal(socket, %{
+       categories: socket.assigns.all_categories,
+       transaction: transaction
+     })}
   end
 
   def handle_event("add_transaction", _params, socket) do
-    {:noreply, KbfWeb.LayoutView.live_assign_add_modal(socket)}
+    {:noreply,
+     KbfWeb.LayoutView.live_assign_add_modal(socket, %{categories: socket.assigns.all_categories})}
   end
 end

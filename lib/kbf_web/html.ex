@@ -1,5 +1,14 @@
 defmodule KbfWeb.HTML do
-  def attrs_with_class_default(opts, default) do
+  def attrs_with_class_default(opts, ""), do: opts
+
+  def attrs_with_class_default(opts, nil), do: opts
+
+  def attrs_with_class_default(opts, default) when is_map(opts) do
+    opts
+    |> Map.update(:class, default, &"#{&1} #{default}")
+  end
+
+  def attrs_with_class_default(opts, default) when is_list(opts) do
     opts
     |> Keyword.update(:class, default, &"#{&1} #{default}")
   end
