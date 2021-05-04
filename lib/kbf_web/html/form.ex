@@ -13,8 +13,27 @@ defmodule KbfWeb.HTML.Form do
     Phoenix.HTML.Form.text_input(form, field, add_default_attributes(opts))
   end
 
+  def textarea(form, field, opts \\ []) do
+    Phoenix.HTML.Form.textarea(form, field, add_default_attributes(opts))
+  end
+
   def date_input(form, field, opts \\ []) do
     Phoenix.HTML.Form.date_input(form, field, add_default_attributes(opts))
+  end
+
+  def category_input(all_categories, selected, opts_fn) do
+    Phoenix.HTML.Tag.content_tag :div, class: "flex flex-wrap gap-2" do
+      for category <- all_categories do
+        KbfWeb.ComponentHelpers.component(
+          "category_pill.html",
+          opts_fn.(
+            category: category,
+            phx_value_category_id: category.id,
+            faded: !selected[category.id]
+          )
+        )
+      end
+    end
   end
 
   def error_tags(form, field) do

@@ -37,6 +37,7 @@ defmodule Kbf.MixProject do
       {:telemetry_metrics, "~> 0.4"},
       {:telemetry_poller, "~> 0.4"},
       {:jason, "~> 1.0"},
+      {:csv, "~> 2.4"},
       {:number, "~> 1.0.3"},
       {:tzdata, "~> 1.1.0"},
       {:pbkdf2_elixir, "~> 1.4.0"},

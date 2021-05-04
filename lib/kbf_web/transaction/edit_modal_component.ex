@@ -58,7 +58,7 @@ defmodule KbfWeb.Transaction.EditModalComponent do
     {:noreply, assign(socket, :changeset, updated_changeset)}
   end
 
-  def handle_event("update_selected_categories", %{"toggle-id" => toggle_id}, socket) do
+  def handle_event("update_selected_categories", %{"category-id" => toggle_id}, socket) do
     {:noreply,
      update(socket, :selected_categories, fn old_categories ->
        old_categories

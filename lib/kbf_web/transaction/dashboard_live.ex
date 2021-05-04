@@ -2,7 +2,7 @@ defmodule KbfWeb.Transaction.DashboardLive do
   use KbfWeb, :live_view
   import KbfWeb.Transaction
 
-  @recent_day_cutoff 10
+  @recent_day_cutoff 14
 
   @impl true
   def mount(_params, session, socket) do
