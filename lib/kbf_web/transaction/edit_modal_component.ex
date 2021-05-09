@@ -15,6 +15,7 @@ defmodule KbfWeb.Transaction.EditModalComponent do
        transaction: transaction,
        changeset: changeset,
        all_categories: categories,
+       delete_modal_open: false,
        selected_categories: selected_categories
      })}
   end
@@ -35,18 +36,19 @@ defmodule KbfWeb.Transaction.EditModalComponent do
 
     case operation do
       {:ok, _updated_transaction} ->
-        {:noreply, send_close(socket, true)}
+        {:noreply, send_close(socket, :updated)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply,
          socket
+         |> clear_flash()
          |> put_flash(:error, "Could not save transaction.")
          |> assign(:changeset, changeset)}
     end
   end
 
   def handle_event("cancel", _payload, socket) do
-    {:noreply, send_close(socket, false)}
+    {:noreply, send_close(socket, nil)}
   end
 
   def handle_event("validate", %{"transaction" => transaction_params}, socket) do
@@ -65,6 +67,25 @@ defmodule KbfWeb.Transaction.EditModalComponent do
        |> Map.update(toggle_id, true, &!/1)
      end)}
   end
+
+  def handle_event("confirm_delete_transaction", payload, socket) do
+    with {:ok, _deleted} <- Kbf.Transaction.delete(socket.assigns.transaction),
+         {:noreply, socket} <- handle_event("close_delete_modal", payload, socket) do
+      {:noreply, send_close(socket, :deleted)}
+    else
+      _ ->
+        {:noreply,
+         socket
+         |> clear_flash()
+         |> put_flash(:error, "Could not delete transaction.")}
+    end
+  end
+
+  def handle_event("open_delete_modal", _payload, socket),
+    do: {:noreply, assign(socket, :delete_modal_open, true)}
+
+  def handle_event("close_delete_modal", _payload, socket),
+    do: {:noreply, assign(socket, :delete_modal_open, false)}
 
   defp send_close(socket, is_updated) do
     send(self(), {KbfWeb.Transaction.EditModalComponent, :close, is_updated})

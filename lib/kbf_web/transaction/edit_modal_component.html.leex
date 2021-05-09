@@ -1,4 +1,4 @@
-<%= component "modal.html", backdrop_attrs: [phx_target: @myself, phx_click: :cancel], post_script: KbfWeb.LayoutView.flash_alerts(@flash) do %>
+<%= component "modal.html", backdrop_attrs: [phx_target: @myself, phx_click: :cancel], post_script: unless(@delete_modal_open, do: KbfWeb.LayoutView.flash_alerts(@flash)) do %>
   <%= form = form_for @changeset, "#", [phx_target: @myself, phx_change: :validate, phx_submit: :save] %>
     <div class="px-6 pt-5">
       <%= component "sub_header.html", content: "Edit Transaction" %>
@@ -22,8 +22,24 @@
       <% end %>
     </div>
     <div class="bg-gray-100 space-x-4 px-6 py-5 flex items-center justify-end">
+      <%= if @transaction.id do %>
+        <%= component "button.html", phx_target: @myself, phx_click: :open_delete_modal, class: "mr-auto", do: component("icon.html", name: "trash") %>
+      <% end %>
       <%= component "button.html", phx_target: @myself, phx_click: :cancel, do: "Cancel" %>
       <%= component "button.html", type: :submit, button_style: :confirm, phx_disable_with: "Saving...", do: "Save" %>
     </div>
   </form>
+<% end %>
+
+<%= if @delete_modal_open do %>
+  <%= component "modal.html", backdrop_attrs: [phx_click: :cancel_delete_modal], post_script: KbfWeb.LayoutView.flash_alerts(@flash) do %>
+    <div class="px-6 py-5">
+      <%= component "sub_header.html", content: "Are you sure you want to delete \"#{@transaction.description}\"" %>
+      <p>This cannot be undone.</p>
+    </div>
+    <footer class="bg-gray-100 space-x-4 px-6 py-5 flex items-center justify-end">
+      <%= component "button.html", phx_target: @myself, phx_click: :close_delete_modal, do: "Cancel" %>
+      <%= component "button.html", phx_target: @myself, phx_click: :confirm_delete_transaction, button_style: :warning, do: "Delete" %>
+    </footer>
+  <% end %>
 <% end %>

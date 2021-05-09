@@ -50,19 +50,40 @@ defmodule KbfWeb.Transaction.DashboardLive do
     {:noreply, new_socket}
   end
 
-  def handle_info({KbfWeb.Transaction.EditModalComponent, :close, is_updated}, socket) do
+  def handle_info({:transaction_deleted, %Kbf.Transaction{id: id}}, socket) do
+    new_socket =
+      update(socket, :recent_transactions, fn old_transactions ->
+        old_transactions
+        |> Enum.filter(&(&1.id != id))
+        |> KbfWeb.Transaction.sort_by_when()
+      end)
+
+    {:noreply, new_socket}
+  end
+
+  def handle_info({KbfWeb.Transaction.EditModalComponent, :close, action}, socket) do
     socket = KbfWeb.LayoutView.live_unassign_edit_modal(socket)
 
     socket =
-      if is_updated do
-        KbfWeb.LayoutView.put_temporary_flash(
-          socket,
-          :info,
-          "Saved transaction successfully.",
-          :clear_flash
-        )
-      else
-        socket
+      case action do
+        :updated ->
+          KbfWeb.LayoutView.put_temporary_flash(
+            socket,
+            :info,
+            "Saved transaction successfully.",
+            :clear_flash
+          )
+
+        :deleted ->
+          KbfWeb.LayoutView.put_temporary_flash(
+            socket,
+            :info,
+            "Deleted transaction successfully.",
+            :clear_flash
+          )
+
+        _ ->
+          socket
       end
 
     {:noreply, socket}

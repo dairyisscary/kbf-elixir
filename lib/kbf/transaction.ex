@@ -120,6 +120,12 @@ defmodule Kbf.Transaction do
     |> broadcast(:transaction_updated)
   end
 
+  def delete(%Kbf.Transaction{} = transaction) do
+    transaction
+    |> Repo.delete()
+    |> broadcast(:transaction_deleted)
+  end
+
   def subscribe() do
     Phoenix.PubSub.subscribe(Kbf.PubSub, "transactions")
   end
