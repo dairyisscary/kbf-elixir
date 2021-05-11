@@ -202,7 +202,7 @@ defmodule KbfWeb.Category.ListingLive do
     [
       phx_click: :open_modal,
       phx_value_id: category.id,
-      class: "cursor-pointer",
+      class: "cursor-pointer even:bg-gray-50",
       id: "category-table-row-#{category.id}",
       do: [
         category.name,

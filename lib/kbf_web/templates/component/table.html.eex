@@ -2,7 +2,7 @@
   <thead class="bg-gray-50">
     <tr>
       <%= for heading <- @headings do %>
-        <th scope="col" class="px-6 py-3 text-xs font-medium tracking-wider uppercase text-left text-gray-500"><%= heading %></th>
+        <th scope="col" class="pl-6 py-3 text-xs font-medium tracking-wider uppercase text-left text-gray-500"><%= heading %></th>
       <% end %>
     </tr>
   </thead>
@@ -10,7 +10,7 @@
     <%= for row <- @rows do %>
       <%= content_tag :tr, table_tr_opts(row) do %>
         <%= for cell <- row[:do] do %>
-          <td class="px-6 py-4 whitespace-nowrap"><%= cell %></td>
+          <td class="pl-6 py-4 whitespace-nowrap"><%= cell %></td>
         <% end %>
       <% end %>
     <% end %>

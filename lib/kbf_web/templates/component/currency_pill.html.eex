@@ -1,3 +1,3 @@
-<span class="rounded-sm p-1 text-sm <%= if @value >= 0, do: "bg-green-400", else: "bg-purple-400" %>">
+<span class="rounded px-2 py-1 <%= if @value >= 0, do: "bg-green-300", else: "bg-purple-300" %>">
   <%= @value |> format_currency() %>
 </span>

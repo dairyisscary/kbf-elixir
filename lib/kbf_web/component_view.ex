@@ -3,7 +3,7 @@ defmodule KbfWeb.ComponentView do
 
   def category_pill_opts(pill_opts) do
     pill_opts
-    |> attrs_with_class_default("space-x-1 rounded-sm px-2 py-1 text-sm")
+    |> attrs_with_class_default("space-x-1 rounded px-2 py-1 text-sm")
     |> attrs_with_class_default(if(pill_opts[:phx_click], do: "cursor-pointer"))
     |> attrs_with_class_default(if(pill_opts[:faded], do: "opacity-50"))
     |> attrs_with_class_default(KbfWeb.Category.color_classes_for(pill_opts[:category]))
@@ -13,7 +13,7 @@ defmodule KbfWeb.ComponentView do
 
   def table_tr_opts(row_opts) do
     row_opts
-    |> attrs_with_class_default("transition-all hover:bg-gray-100 hover:shadow-lg")
+    |> attrs_with_class_default("transition-all hover:bg-gray-100")
     |> Keyword.delete(:do)
   end
 
