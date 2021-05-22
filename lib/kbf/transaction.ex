@@ -21,17 +21,31 @@ defmodule Kbf.Transaction do
     timestamps()
   end
 
-  def newer_than_n_days_ago(days) do
+  def from_filters(%{} = filters) do
     from(t in Kbf.Transaction,
       select: ^@default_select,
       preload: [categories: ^Kbf.Category.all_by_name_preload()],
-      where: t.when >= ^days_ago(days) or is_nil(t.when)
+      where: ^build_query_where_filters(filters),
+      or_where: is_nil(t.when)
     )
     |> Repo.all()
+    |> category_filter(filters[:categories])
   end
 
-  def happened_on_or_before_days_ago(transaction, days) do
-    transaction.when >= days_ago(days)
+  def matches_filters(transaction, filters) do
+    Enum.all?(filters, fn
+      {:after, %Date{} = after_date} ->
+        transaction.when >= after_date
+
+      {:before, %Date{} = before_date} ->
+        transaction.when <= before_date
+
+      {:categories, %{} = categories} ->
+        !Enum.empty?(category_filter([transaction], categories))
+
+      _ ->
+        true
+    end)
   end
 
   def total_count() do
@@ -130,10 +144,6 @@ defmodule Kbf.Transaction do
     Phoenix.PubSub.subscribe(Kbf.PubSub, "transactions")
   end
 
-  defp days_ago(days) do
-    Date.utc_today() |> Date.add(-days)
-  end
-
   defp broadcast({:error, _reason} = error, _event), do: error
 
   defp broadcast({:ok, %{inserted_transactions: transactions} = multi}, event) do
@@ -144,5 +154,34 @@ defmodule Kbf.Transaction do
     Phoenix.PubSub.broadcast(Kbf.PubSub, "transactions", {event, transaction})
 
     success
+  end
+
+  defp build_query_where_filters(filters) do
+    Enum.reduce(filters, dynamic(true), &get_where_from_pair/2)
+  end
+
+  defp get_where_from_pair({:before, %Date{} = before_date}, dynamic) do
+    dynamic([t], ^dynamic and t.when <= ^before_date)
+  end
+
+  defp get_where_from_pair({:after, %Date{} = after_date}, dynamic) do
+    dynamic([t], ^dynamic and t.when >= ^after_date)
+  end
+
+  defp get_where_from_pair(_, dynamic), do: dynamic
+
+  defp category_filter(transactions, nil), do: transactions
+
+  defp category_filter(transactions, %{} = category_ids) do
+    desired_category_ids =
+      category_ids
+      |> Enum.filter(fn {_id, desired} -> desired end)
+      |> Enum.map(fn {id, _desired} -> id end)
+
+    Enum.filter(transactions, fn transaction ->
+      Enum.all?(desired_category_ids, fn desired_id ->
+        Enum.any?(transaction.categories, fn category -> category.id == desired_id end)
+      end)
+    end)
   end
 end

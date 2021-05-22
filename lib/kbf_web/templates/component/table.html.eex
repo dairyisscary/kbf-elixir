@@ -14,5 +14,10 @@
         <% end %>
       <% end %>
     <% end %>
+    <%= if Enum.empty?(@rows) do %>
+      <tr>
+        <td class="pl-6 py-4 text-center" colspan="100%"><%= assigns[:empty] %></td>
+      </tr>
+    <% end %>
   </tbody>
 </table>

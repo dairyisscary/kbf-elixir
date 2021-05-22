@@ -1,21 +1,19 @@
 defmodule KbfWeb.Transaction.ListingLive do
   use KbfWeb, :live_view
 
-  @day_cutoff 30
-
   @impl true
   def mount(_params, session, socket) do
     if connected?(socket), do: Kbf.Transaction.subscribe()
 
     socket =
-      assign(socket,
+      socket
+      |> assign(
         page_title: "All Transactions",
         user: KbfWeb.Session.get_user_from_socket_session!(session),
         all_categories: Kbf.Category.all_by_name(),
-        transactions:
-          Kbf.Transaction.newer_than_n_days_ago(@day_cutoff)
-          |> KbfWeb.Transaction.sort_by_when()
+        filters: %{after: Kbf.Calendar.days_ago(30), categories: %{}}
       )
+      |> transactions_from_filters()
 
     {:ok, socket}
   end
@@ -36,7 +34,7 @@ defmodule KbfWeb.Transaction.ListingLive do
 
   def handle_info({:transaction_created, new_transaction}, socket) do
     new_socket =
-      if Kbf.Transaction.happened_on_or_before_days_ago(new_transaction, @day_cutoff) do
+      if Kbf.Transaction.matches_filters(new_transaction, socket.assigns[:filters]) do
         update(socket, :transactions, fn old ->
           [new_transaction | old]
           |> KbfWeb.Transaction.sort_by_when()
@@ -92,6 +90,13 @@ defmodule KbfWeb.Transaction.ListingLive do
   end
 
   @impl true
+  def handle_event("filter_transactions", %{"filters" => filters}, socket) do
+    {:noreply,
+     socket
+     |> assign(:filters, parse_filters(filters))
+     |> transactions_from_filters()}
+  end
+
   def handle_event("edit_transaction", %{"id" => id}, socket) do
     transaction = Enum.find(socket.assigns.transactions, &(&1.id == id))
 
@@ -105,5 +110,25 @@ defmodule KbfWeb.Transaction.ListingLive do
   def handle_event("add_transaction", _params, socket) do
     {:noreply,
      KbfWeb.LayoutView.live_assign_add_modal(socket, %{categories: socket.assigns.all_categories})}
+  end
+
+  defp parse_filters(%{} = filters) do
+    %{
+      categories:
+        filters["categories"]
+        |> Enum.filter(fn {_id, value} -> value == "true" end)
+        |> Enum.into(%{}, fn {id, _value} -> {id, true} end),
+      before: Kbf.Calendar.parse_date(filters["before"]),
+      after: Kbf.Calendar.parse_date(filters["after"])
+    }
+  end
+
+  defp transactions_from_filters(socket) do
+    transactions =
+      socket.assigns[:filters]
+      |> Kbf.Transaction.from_filters()
+      |> KbfWeb.Transaction.sort_by_when()
+
+    assign(socket, :transactions, transactions)
   end
 end

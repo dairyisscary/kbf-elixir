@@ -1,13 +1,50 @@
 <%= component "main_content_header.html", content: "All Transactions" %>
 
-<div class="flex space-x-6">
-  <div class="flex-1">
-    <%= live_component @socket, KbfWeb.Transaction.TableComponent, transactions: @transactions %>
-  </div>
+<div class="flex flex-col">
+  <%= f = form_for :filters, "#", [class: "mb-10", phx_submit: :filter_transactions] %>
+    <div class="flex items-center space-x-4">
 
-  <aside class="space-y-4 w-52">
-    <%= component "stat.html", title: "Transaction Count", value: length(@transactions) %>
-    <%= component "stat.html", title: "Total Spend", value: KbfWeb.Transaction.sum_spend(@transactions) |> format_currency() %>
-    <%= component "stat.html", title: "Total Income", value: KbfWeb.Transaction.sum_income(@transactions) |> format_currency() %>
-  </aside>
+      <%= label f, :after, "On or After:", class: "text-gray-500" %>
+      <%= date_input f, :after, value: @filters[:after], class: "w-48" %>
+
+      <%= label f, :before, "On or Before:", class: "text-gray-500" %>
+      <%= date_input f, :before, value: @filters[:before], class: "w-48" %>
+
+      <div class="flex-1">
+        <div class="relative group">
+          <span class="text-gray-500">Categories:</span>
+          <%= if map_size(@filters[:categories]) == 0 do %>
+            None
+          <% else %>
+            <%= map_size(@filters[:categories]) %> Selected
+          <% end %>
+
+          <ul class="absolute hidden group-hover:block shadow-md rounded-sm border left-0 bg-white p-6 space-y-3">
+            <%= inputs_for f, :categories, fn cat_sub -> %>
+              <%= for category <- @all_categories do %>
+                <li class="flex items-center">
+                  <%= checkbox cat_sub, category.id, class: "mr-2", checked: @filters[:categories][category.id] %>
+                  <%= component "category_pill.html", category: category %>
+                </li>
+              <% end %>
+            <% end %>
+          </ul>
+        </div>
+      </div>
+
+      <%= component "button.html", type: :submit, button_style: :confirm, do: "Search" %>
+    </div>
+  </form>
+
+  <div class="flex space-x-6">
+    <div class="flex-1">
+      <%= live_component @socket, KbfWeb.Transaction.TableComponent, transactions: @transactions %>
+    </div>
+
+    <aside class="space-y-4 w-52">
+      <%= component "stat.html", title: "Transaction Count", value: length(@transactions) %>
+      <%= component "stat.html", title: "Total Spend", value: KbfWeb.Transaction.sum_spend(@transactions) |> format_currency() %>
+      <%= component "stat.html", title: "Total Income", value: KbfWeb.Transaction.sum_income(@transactions) |> format_currency() %>
+    </aside>
+  </div>
 </div>

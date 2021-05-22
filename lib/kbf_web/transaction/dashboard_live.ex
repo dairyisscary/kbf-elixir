@@ -2,11 +2,11 @@ defmodule KbfWeb.Transaction.DashboardLive do
   use KbfWeb, :live_view
   import KbfWeb.Transaction
 
-  @recent_day_cutoff 14
-
   @impl true
   def mount(_params, session, socket) do
     if connected?(socket), do: Kbf.Transaction.subscribe()
+
+    filters = %{after: Kbf.Calendar.days_ago(14)}
 
     socket =
       assign(socket,
@@ -14,8 +14,9 @@ defmodule KbfWeb.Transaction.DashboardLive do
         user: KbfWeb.Session.get_user_from_socket_session!(session),
         total_transaction_count: Kbf.Transaction.total_count(),
         all_categories: Kbf.Category.all_by_name(),
+        filters: filters,
         recent_transactions:
-          Kbf.Transaction.newer_than_n_days_ago(@recent_day_cutoff)
+          Kbf.Transaction.from_filters(filters)
           |> KbfWeb.Transaction.sort_by_when()
       )
 
@@ -38,7 +39,7 @@ defmodule KbfWeb.Transaction.DashboardLive do
 
   def handle_info({:transaction_created, new_transaction}, socket) do
     new_socket =
-      if Kbf.Transaction.happened_on_or_before_days_ago(new_transaction, @recent_day_cutoff) do
+      if Kbf.Transaction.matches_filters(new_transaction, socket.assigns[:filters]) do
         update(socket, :recent_transactions, fn old ->
           [new_transaction | old]
           |> KbfWeb.Transaction.sort_by_when()
