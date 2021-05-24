@@ -8,18 +8,18 @@ defmodule KbfWeb.Session.UserRequirement do
 
   def call(conn, must_be_present) do
     case KbfWeb.Session.verify_user(conn) do
-      {:ok, _user_id} when must_be_present ->
+      {:ok, _user_id, conn} when must_be_present ->
         conn
 
-      {:error, _reason} when must_be_present ->
+      {:error, _reason, conn} when must_be_present ->
         conn
         |> stop_to(KbfWeb.Router.Helpers.live_path(conn, KbfWeb.Account.LoginLive))
 
-      {:ok, _user_id} ->
+      {:ok, _user_id, conn} ->
         conn
         |> stop_to(KbfWeb.Router.Helpers.live_path(conn, KbfWeb.Transaction.DashboardLive))
 
-      {:error, _reason} ->
+      {:error, _reason, conn} ->
         conn
     end
   end

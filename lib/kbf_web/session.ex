@@ -22,11 +22,14 @@ defmodule KbfWeb.Session do
 
   def verify_user(conn) do
     case {get_session(conn, :user_id), get_session(conn, :expires_at)} do
+      {nil, nil} ->
+        {:error, :empty, conn}
+
       {nil, _} ->
-        {:error, :empty}
+        {:error, :empty, logout_user(conn)}
 
       {_, nil} ->
-        {:error, :empty}
+        {:error, :empty, logout_user(conn)}
 
       {user_id, expires_at} ->
         verify_expiration(conn, user_id, expires_at)
@@ -39,11 +42,9 @@ defmodule KbfWeb.Session do
 
   defp verify_expiration(conn, user_id, expires_at) do
     if now_in_seconds() > expires_at do
-      logout_user(conn)
-      {:error, :expired}
+      {:error, :expired, logout_user(conn)}
     else
-      put_session_fresh_expires_at(conn)
-      {:ok, user_id}
+      {:ok, user_id, put_session_fresh_expires_at(conn)}
     end
   end
 
