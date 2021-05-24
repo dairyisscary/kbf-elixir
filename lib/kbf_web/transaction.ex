@@ -3,6 +3,8 @@ defmodule KbfWeb.Transaction do
 
   import KbfWeb.ComponentHelpers
 
+  @future_date ~D[2100-01-01]
+
   def sum_spend(transactions) do
     sum_with_filter(transactions, &(&1 < 0))
   end
@@ -38,7 +40,7 @@ defmodule KbfWeb.Transaction do
 
   def sort_by_when(transactions) do
     transactions
-    |> Enum.sort_by(& &1.when, &>=/2)
+    |> Enum.sort_by(&(&1.when || @future_date), {:desc, Date})
   end
 
   defp sum_with_filter(transactions, filter_fn) do
