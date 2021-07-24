@@ -4,6 +4,8 @@ defmodule KbfWeb.Endpoint do
   @session_options [
     store: :cookie,
     key: "_kbf_key",
+    same_site: "Strict",
+    http_only: true,
     signing_salt: "vrlDC0YaqOUfgWAo7JD8wgkdW95yR+wQ"
   ]
 
