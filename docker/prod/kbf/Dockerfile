@@ -1,4 +1,4 @@
-FROM elixir:1.12.0-slim
+FROM elixir:1.12.2-slim
 
 ENV MIX_ENV prod
 ENV NODE_ENV production
