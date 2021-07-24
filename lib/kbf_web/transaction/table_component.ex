@@ -20,7 +20,7 @@ defmodule KbfWeb.Transaction.TableComponent do
         end,
         content_tag(
           :div,
-          html_component("currency_pill.html", value: transaction.amount),
+          html_component("currency_pill.html", transaction: transaction),
           class: "flex justify-end mr-6"
         )
       ]

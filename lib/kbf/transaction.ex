@@ -5,12 +5,13 @@ defmodule Kbf.Transaction do
   alias Kbf.Repo
   alias Ecto.Multi
 
-  @default_select [:id, :description, :when, :amount]
+  @default_select [:id, :description, :when, :amount, :currency]
 
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
   schema "transactions" do
     field :amount, :float
+    field :currency, Kbf.Transaction.Currency
     field :description, :string
     field :when, :date
 
@@ -56,8 +57,8 @@ defmodule Kbf.Transaction do
   @doc false
   def changeset(transaction, attrs) do
     transaction
-    |> cast(attrs, [:description, :amount, :when])
-    |> validate_required([:description, :amount])
+    |> cast(attrs, [:description, :amount, :currency, :when])
+    |> validate_required([:description, :amount, :currency])
     |> put_assoc(:categories, attrs["categories"])
   end
 
@@ -81,24 +82,24 @@ defmodule Kbf.Transaction do
     |> Multi.run(:dedupe, fn repo, _multi ->
       root_query =
         from(t in Kbf.Transaction,
-          select: [:id, :when, :amount, :inserted_at]
+          select: [:id, :when, :amount, :currency, :inserted_at]
         )
 
       dupes =
         changesets
         |> Enum.reduce(root_query, fn changeset, query ->
-          %{when: w, amount: a} = changeset.changes
+          %{when: w, amount: a, currency: c} = changeset.changes
 
-          from(t in query, or_where: t.when == ^w and t.amount == ^a)
+          from(t in query, or_where: t.when == ^w and t.amount == ^a and t.currency == ^c)
         end)
         |> repo.all()
 
       deduped_changesets =
         changesets
         |> Enum.map(fn changeset ->
-          %{when: w, amount: a} = changeset.changes
+          %{when: w, amount: a, currency: c} = changeset.changes
 
-          {changeset, Enum.find(dupes, &(&1.when == w && &1.amount == a))}
+          {changeset, Enum.find(dupes, &(&1.when == w && &1.amount == a && &1.currency == c))}
         end)
 
       {:ok, deduped_changesets}

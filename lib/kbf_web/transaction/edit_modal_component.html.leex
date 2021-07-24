@@ -11,6 +11,8 @@
         <%= number_input form, :amount %>
       <% end %>
 
+      <%= html_component "currency_form_row.html", form: form, field: :currency %>
+
       <%= html_component "form_row.html", form: form, field: :when do %>
         <%= date_input form, :when %>
       <% end %>

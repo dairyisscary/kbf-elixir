@@ -1,0 +1,8 @@
+<%= html_component "radio_form_row.html",
+  form: @form,
+  field: @field,
+  radios: [
+    [value: :euro, do: "€ Euro", opts: [checked: "checked"]],
+    [value: :usd, do: "$ USD"],
+  ]
+%>

@@ -1,16 +1,13 @@
 defmodule KbfWeb.Format do
-  def format_int(number) do
-    number
-    |> Number.Delimit.number_to_delimited(precision: 0)
+  def format_currency(number, :euro) do
+    Number.Currency.number_to_currency(number, unit: "€", separator: ",", delimiter: ".")
   end
 
-  def format_currency(number) do
-    Number.Currency.number_to_currency(number)
-  end
+  def format_currency(number, :usd), do: Number.Currency.number_to_currency(number)
+
+  def format_int(number), do: Number.Delimit.number_to_delimited(number, precision: 0)
 
   def format_date(nil), do: ""
 
-  def format_date(date) do
-    Calendar.strftime(date, "%d %b %Y")
-  end
+  def format_date(date), do: Calendar.strftime(date, "%d %b %Y")
 end

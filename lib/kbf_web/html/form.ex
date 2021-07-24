@@ -1,4 +1,6 @@
 defmodule KbfWeb.HTML.Form do
+  import Phoenix.HTML, only: [sigil_E: 2]
+
   def number_input(form, field, opts \\ []) do
     a11y_opts =
       opts
@@ -19,6 +21,15 @@ defmodule KbfWeb.HTML.Form do
 
   def date_input(form, field, opts \\ []) do
     Phoenix.HTML.Form.date_input(form, field, add_default_attributes(opts))
+  end
+
+  def radio_button_with_label(form, field, value, opts \\ [], do: block) do
+    Phoenix.HTML.Form.label class: "cursor-pointer inline-flex items-center space-x-2" do
+      ~E"""
+        <%= Phoenix.HTML.Form.radio_button(form, field, value, opts) %>
+        <span><%= block %></span>
+      """
+    end
   end
 
   def category_input(all_categories, selected, opts_fn) do

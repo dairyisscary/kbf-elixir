@@ -1,10 +1,16 @@
 <%= html_component "main_content_header.html", content: "Dashboard" %>
 
 <section class="grid grid-cols-1 gap-5 mb-6 sm:grid-cols-2 lg:grid-cols-4">
-  <%= dash_pill "Recent Transactions", value: length(@recent_transactions) |> format_int(), icon_name: "clock" %>
-  <%= dash_pill "Recent Spend", value: sum_spend(@recent_transactions) |> format_currency(), icon_name: "dollar-sign" %>
-  <%= dash_pill "Recent Income", value: sum_income(@recent_transactions) |> format_currency(), icon_name: "dollar-sign" %>
-  <%= dash_pill "Total Transactions", value: @total_transaction_count, icon_name: "layers" %>
+  <%= dash_pill "Recent Transactions", icon_name: "clock", do: length(@recent_transactions) |> format_int() %>
+  <%= dash_pill "Recent Spend", icon_name: "dollar-sign" do %>
+    <%= @recent_transactions |> transaction_sum_spend(:euro) %>
+    <%= @recent_transactions |> transaction_sum_spend(:usd) %>
+  <% end %>
+  <%= dash_pill "Recent Income", icon_name: "dollar-sign" do %>
+    <%= @recent_transactions |> transaction_sum_income(:euro) %>
+    <%= @recent_transactions |> transaction_sum_income(:usd) %>
+  <% end %>
+  <%= dash_pill "Total Transactions", icon_name: "layers", do: @total_transaction_count %>
 </section>
 
 <%= html_component "sub_header.html", content: "Recent Transactions" %>

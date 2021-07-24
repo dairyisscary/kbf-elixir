@@ -96,7 +96,7 @@ defmodule KbfWeb.Transaction.MassImportLive do
         "\"",
         content_tag(:span, changes[:description], class: "font-medium"),
         "\" (",
-        format_currency(changes[:amount]),
+        format_currency(changes[:amount], changes[:currency]),
         ") from ",
         format_date(changes[:when]),
         tag(:br),

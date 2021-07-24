@@ -3,6 +3,7 @@ defmodule Kbf.Transaction.CSV do
 
   @struct_types %{
     csv_content: :string,
+    currency: Kbf.Transaction.Currency,
     invert_amount: :boolean,
     exclude_credits: :boolean,
     categories: {:array, :map}
@@ -10,6 +11,7 @@ defmodule Kbf.Transaction.CSV do
 
   defstruct [
     :csv_content,
+    :currency,
     invert_amount: false,
     exclude_credits: true,
     categories: []
@@ -24,13 +26,14 @@ defmodule Kbf.Transaction.CSV do
 
   def empty_changeset(params) do
     {%Kbf.Transaction.CSV{}, @struct_types}
-    |> cast(params, [:csv_content, :invert_amount, :exclude_credits, :categories])
-    |> validate_required([:csv_content])
+    |> cast(params, [:csv_content, :currency, :invert_amount, :exclude_credits, :categories])
+    |> validate_required([:csv_content, :currency])
   end
 
   defp process_csv({:ok, csv_options}) do
     %Kbf.Transaction.CSV{
       invert_amount: invert_amount,
+      currency: currency,
       exclude_credits: exclude_credits,
       categories: categories,
       csv_content: csv_content
@@ -49,6 +52,7 @@ defmodule Kbf.Transaction.CSV do
            "when" => date_when,
            "description" => description,
            "amount" => amount,
+           "currency" => currency,
            "categories" => categories
          }}
       end

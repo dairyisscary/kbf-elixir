@@ -12,7 +12,7 @@ iframe[hidden] {
 }
 
 .kbf-form-row {
-  > *:not(.flex) {
+  > *:not(.flex, .inline-flex) {
     @apply block;
   }
 }

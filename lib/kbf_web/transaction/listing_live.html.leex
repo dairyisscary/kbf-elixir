@@ -42,9 +42,17 @@
     </div>
 
     <aside class="space-y-4 w-52">
-      <%= html_component "stat.html", title: "Transaction Count", value: length(@transactions) %>
-      <%= html_component "stat.html", title: "Total Spend", value: KbfWeb.Transaction.sum_spend(@transactions) |> format_currency() %>
-      <%= html_component "stat.html", title: "Total Income", value: KbfWeb.Transaction.sum_income(@transactions) |> format_currency() %>
+      <%= html_component "stat.html", title: "Transaction Count" do %>
+        <%= length(@transactions) %>
+      <% end %>
+      <%= html_component "stat.html", title: "Total Spend" do %>
+        <%= @transactions |> KbfWeb.Transaction.transaction_sum_spend(:euro) %>
+        <%= @transactions |> KbfWeb.Transaction.transaction_sum_spend(:usd) %>
+      <% end %>
+      <%= html_component "stat.html", title: "Total Income" do %>
+        <%= @transactions |> KbfWeb.Transaction.transaction_sum_income(:euro) %>
+        <%= @transactions |> KbfWeb.Transaction.transaction_sum_income(:usd) %>
+      <% end %>
     </aside>
   </div>
 </div>

@@ -6,7 +6,9 @@
       <%= textarea form, :csv_content, class: "h-48" %>
     <% end %>
 
-    <%= html_component "form_row.html", form: form, field: :categories, label_do: "Add These to All Imports" do %>
+    <%= html_component "currency_form_row.html", form: form, field: :currency %>
+
+    <%= html_component "form_row.html", form: form, field: :categories, label_do: "Add These Categories to All Imports" do %>
       <%= category_input(@all_categories, @selected_categories, fn opts ->
         Keyword.merge(opts, phx_click: :update_selected_categories)
       end) %>

@@ -1,7 +1,7 @@
 <div class="kbf-form-row mb-5">
-  <%= label @form, @field, class: "flex items-center text-sm font-medium mb-2" do %>
+  <%= label @form, @field, class: "cursor-pointer flex items-center text-sm font-medium mb-2" do %>
     <%= checkbox @form, @field %>
-    <span class="ml-3">
+    <span class="ml-2">
       <%= assigns.do %>
     </span>
   <% end %>

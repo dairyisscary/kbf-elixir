@@ -1,4 +1,4 @@
 <div class="rounded bg-gray-100 text-center p-6">
   <h5 class="text-gray-500"><%= @title %></h5>
-  <div class="text-xl mt-3"><%= @value %></div>
+  <div class="text-xl mt-3"><%= assigns.do %></div>
 </div>
