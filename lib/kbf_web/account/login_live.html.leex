@@ -1,7 +1,7 @@
 <div class="flex items-center justify-center min-h-full flex-shrink-0 bg-gray-100 overflow-auto">
   <div class="flex items-center flex-col w-full max-w-md my-14">
     <header class="kbf-main-logo-container-running flex items-center space-x-3 text-2xl mb-10 font-semibold">
-      <%= component "main_logo.html", text: "Kbf Login" %>
+      <%= html_component "main_logo.html", text: "Kbf Login" %>
     </header>
 
     <%= form = form_for(
@@ -10,16 +10,16 @@
       [phx_submit: :attempt_login, phx_trigger_action: @trigger_submit, class: "bg-white w-full px-6 py-5 shadow rounded-md"]
       )
     %>
-      <%= component "form_row.html", form: form, field: :username do %>
+      <%= html_component "form_row.html", form: form, field: :username do %>
         <%= text_input form, :username, autofocus: "" %>
       <% end %>
 
-      <%= component "form_row.html", form: form, field: :password do %>
+      <%= html_component "form_row.html", form: form, field: :password do %>
         <%= text_input form, :password, type: "password" %>
       <% end %>
 
       <footer class="space-x-4 flex items-center justify-end">
-        <%= component "button.html",
+        <%= html_component "button.html",
           type: :submit,
           button_style: :confirm,
           phx_disable_with: "Working...",

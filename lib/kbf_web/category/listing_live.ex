@@ -191,8 +191,8 @@ defmodule KbfWeb.Category.ListingLive do
     ~E"""
     <span class="flex items-center justify-between">
       <span>Manage Categories</span>
-      <%= component "button.html", phx_click: :open_modal, class: "text-base space-x-1" do %>
-        <%= component "icon.html", name: "plus" %> <span>Add New Category</span>
+      <%= html_component "button.html", phx_click: :open_modal, class: "text-base space-x-1" do %>
+        <%= html_component "icon.html", name: "plus" %> <span>Add New Category</span>
       <% end %>
     </span>
     """

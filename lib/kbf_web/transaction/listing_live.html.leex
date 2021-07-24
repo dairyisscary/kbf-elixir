@@ -1,4 +1,4 @@
-<%= component "main_content_header.html", content: "All Transactions" %>
+<%= html_component "main_content_header.html", content: "All Transactions" %>
 
 <div class="flex flex-col">
   <%= f = form_for :filters, "#", [class: "mb-10", phx_submit: :filter_transactions] %>
@@ -24,7 +24,7 @@
               <%= for category <- @all_categories do %>
                 <li class="flex items-center">
                   <%= checkbox cat_sub, category.id, class: "mr-2", checked: @filters[:categories][category.id] %>
-                  <%= component "category_pill.html", category: category %>
+                  <%= html_component "category_pill.html", category: category %>
                 </li>
               <% end %>
             <% end %>
@@ -32,7 +32,7 @@
         </div>
       </div>
 
-      <%= component "button.html", type: :submit, button_style: :confirm, do: "Search" %>
+      <%= html_component "button.html", type: :submit, button_style: :confirm, do: "Search" %>
     </div>
   </form>
 
@@ -42,9 +42,9 @@
     </div>
 
     <aside class="space-y-4 w-52">
-      <%= component "stat.html", title: "Transaction Count", value: length(@transactions) %>
-      <%= component "stat.html", title: "Total Spend", value: KbfWeb.Transaction.sum_spend(@transactions) |> format_currency() %>
-      <%= component "stat.html", title: "Total Income", value: KbfWeb.Transaction.sum_income(@transactions) |> format_currency() %>
+      <%= html_component "stat.html", title: "Transaction Count", value: length(@transactions) %>
+      <%= html_component "stat.html", title: "Total Spend", value: KbfWeb.Transaction.sum_spend(@transactions) |> format_currency() %>
+      <%= html_component "stat.html", title: "Total Income", value: KbfWeb.Transaction.sum_income(@transactions) |> format_currency() %>
     </aside>
   </div>
 </div>

@@ -1,13 +1,13 @@
 defmodule KbfWeb.ComponentHelpers do
-  def component(template) do
+  def html_component(template) do
     KbfWeb.ComponentView.render(template, [])
   end
 
-  def component(template, assigns) do
+  def html_component(template, assigns) do
     KbfWeb.ComponentView.render(template, assigns)
   end
 
-  def component(template, assigns, do: block) do
+  def html_component(template, assigns, do: block) do
     KbfWeb.ComponentView.render(template, Keyword.merge(assigns, do: block))
   end
 end

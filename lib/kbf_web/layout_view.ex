@@ -7,7 +7,7 @@ defmodule KbfWeb.LayoutView do
   def nav_link(content, to: to, icon: icon) do
     ~E"""
     <%= live_patch to: to, class: "flex items-center transition-colors space-x-2 p-2 rounded-md hover:bg-gray-100" do %>
-      <%= component "icon.html", name: icon, class: "w-6 h-6 text-gray-400" %><span><%= content %></span>
+      <%= html_component "icon.html", name: icon, class: "w-6 h-6 text-gray-400" %><span><%= content %></span>
     <% end %>
     """
   end
@@ -35,7 +35,7 @@ defmodule KbfWeb.LayoutView do
 
     ~E"""
     <div role="alert" class="flex items-center relative shadow border bg-white px-5 py-4 rounded <%= outer_class %>">
-      <%= component "icon.html", name: icon_name %>
+      <%= html_component "icon.html", name: icon_name %>
       <span class="ml-2"><%= live_flash(flash, key) %></span>
       <div class="flex absolute h-3 w-3 -top-1 -right-1">
         <div class="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 <%= inner_class %>"></div>

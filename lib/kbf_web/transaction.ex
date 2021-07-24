@@ -22,7 +22,7 @@ defmodule KbfWeb.Transaction do
           <span class="text-lg font-semibold"><%= value %></span>
         </div>
         <div class="p-6 bg-gray-200 rounded-md">
-          <%= component "icon.html", name: icon_name %>
+          <%= html_component "icon.html", name: icon_name %>
         </div>
       </div>
     </div>

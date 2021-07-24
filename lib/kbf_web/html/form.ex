@@ -24,7 +24,7 @@ defmodule KbfWeb.HTML.Form do
   def category_input(all_categories, selected, opts_fn) do
     Phoenix.HTML.Tag.content_tag :div, class: "flex flex-wrap gap-2" do
       for category <- all_categories do
-        KbfWeb.ComponentHelpers.component(
+        KbfWeb.ComponentHelpers.html_component(
           "category_pill.html",
           opts_fn.(
             category: category,

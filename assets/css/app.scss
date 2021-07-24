@@ -34,9 +34,4 @@ iframe[hidden] {
   }
 }
 
-.kbf-main::after {
-  content: "";
-  @apply block pt-5;
-}
-
 @import "./logo.scss";

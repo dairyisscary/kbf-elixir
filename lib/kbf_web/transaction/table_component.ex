@@ -15,12 +15,12 @@ defmodule KbfWeb.Transaction.TableComponent do
         unless Enum.empty?(transaction.categories) do
           content_tag :div, class: "flex flex-wrap items-center gap-2 max-w-md" do
             transaction.categories
-            |> Enum.map(&component("category_pill.html", category: &1, class: "mr-2"))
+            |> Enum.map(&html_component("category_pill.html", category: &1, class: "mr-2"))
           end
         end,
         content_tag(
           :div,
-          component("currency_pill.html", value: transaction.amount),
+          html_component("currency_pill.html", value: transaction.amount),
           class: "flex justify-end mr-6"
         )
       ]
