@@ -36,10 +36,10 @@ defmodule Kbf.Transaction do
   def matches_filters(transaction, filters) do
     Enum.all?(filters, fn
       {:after, %Date{} = after_date} ->
-        transaction.when >= after_date
+        Date.compare(transaction.when, after_date) != :lt
 
       {:before, %Date{} = before_date} ->
-        transaction.when <= before_date
+        Date.compare(transaction.when, before_date) != :gt
 
       {:categories, %{} = categories} ->
         !Enum.empty?(category_filter([transaction], categories))
