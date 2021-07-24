@@ -179,8 +179,14 @@ defmodule Kbf.Transaction do
       |> Enum.filter(fn {_id, desired} -> desired end)
       |> Enum.map(fn {id, _desired} -> id end)
 
+    filter_transactions_for_desired_categories(transactions, desired_category_ids)
+  end
+
+  defp filter_transactions_for_desired_categories(transactions, []), do: transactions
+
+  defp filter_transactions_for_desired_categories(transactions, desired_category_ids) do
     Enum.filter(transactions, fn transaction ->
-      Enum.all?(desired_category_ids, fn desired_id ->
+      Enum.any?(desired_category_ids, fn desired_id ->
         Enum.any?(transaction.categories, fn category -> category.id == desired_id end)
       end)
     end)
