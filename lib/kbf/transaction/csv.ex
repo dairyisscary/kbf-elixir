@@ -44,7 +44,7 @@ defmodule Kbf.Transaction.CSV do
     |> CSV.decode(headers: true)
     |> flat_map_oks()
     |> Stream.map(fn parsed_row ->
-      with {:ok, date_when} <- marshal_date(parsed_row),
+      with {:ok, date_when} <- marshal_date(parsed_row, currency),
            {:ok, amount} <- marshal_amount(parsed_row, invert_amount),
            {:ok, description} <- marshal_description(parsed_row) do
         {:ok,
@@ -58,22 +58,32 @@ defmodule Kbf.Transaction.CSV do
       end
     end)
     |> flat_map_oks()
-    |> Stream.filter(fn params ->
-      !exclude_credits || params["amount"] < 0
-    end)
+    |> filter_credits(exclude_credits)
     |> Enum.to_list()
     |> Kbf.Transaction.create_many_with_dedupe()
   end
 
   defp process_csv(error), do: error
 
-  defp marshal_date(%{"Date" => raw_date}), do: Date.from_iso8601(raw_date)
+  # Legacy TD
+  defp marshal_date(%{"Date" => raw_date}, :usd), do: Date.from_iso8601(raw_date)
 
-  defp marshal_date(%{"Transaction Date" => raw_date}) do
-    raw_date
-    |> String.split("/")
-    |> case do
-      [month, day, year] ->
+  # Wise and Bunq
+  defp marshal_date(%{"Date" => raw_date}, :euro) do
+    marshal_non_iso_date_if_matches(raw_date, "-", :euro, ~r/-[[:digit:]]{4}$/)
+  end
+
+  # TD and Chase
+  defp marshal_date(%{"Transaction Date" => raw_date}, :usd) do
+    marshal_non_iso_date_if_matches(raw_date, "/", :usd, ~r/^[[:digit:]]{2}\//)
+  end
+
+  defp marshal_non_iso_date(raw_date, char, currency) do
+    case {String.split(raw_date, char), currency} do
+      {[month, day, year], :usd} ->
+        Date.from_iso8601("#{year}-#{month}-#{day}")
+
+      {[day, month, year], :euro} ->
         Date.from_iso8601("#{year}-#{month}-#{day}")
 
       _ ->
@@ -81,8 +91,20 @@ defmodule Kbf.Transaction.CSV do
     end
   end
 
+  defp marshal_non_iso_date_if_matches(raw_date, char, currency, regex) do
+    if String.match?(raw_date, regex) do
+      marshal_non_iso_date(raw_date, char, currency)
+    else
+      Date.from_iso8601(raw_date)
+    end
+  end
+
   defp marshal_description(%{} = row) do
-    {:ok, row["Description"] || row["Merchant Name"]}
+    # Chase and Wise are Description, TD is Merchant Name
+    # Bunq has both Description and Name, so Name is higher presedence
+    value = row["Name"] || row["Description"] || row["Merchant Name"]
+
+    if value, do: {:ok, value}, else: {:error, "could not find description"}
   end
 
   defp marshal_amount(%{"Amount" => raw_amount}, invert_amount) do
@@ -97,6 +119,12 @@ defmodule Kbf.Transaction.CSV do
         {:error, "Could not parse #{raw_amount}"}
     end
   end
+
+  defp filter_credits(stream, true) do
+    stream |> Stream.filter(fn params -> params["amount"] < 0 end)
+  end
+
+  defp filter_credits(stream, _exclude_credits), do: stream
 
   defp flat_map_oks(stream) do
     Stream.flat_map(stream, fn
