@@ -65,11 +65,10 @@ defmodule Kbf.Transaction.CSV do
 
   defp process_csv(error), do: error
 
-  # Legacy TD
-  defp marshal_date(%{"Date" => raw_date}, :usd), do: Date.from_iso8601(raw_date)
-
-  # Wise and Bunq
-  defp marshal_date(%{"Date" => raw_date}, :euro) do
+  # Wise Euro/USD, Legacy TD, and Bunq
+  defp marshal_date(%{"Date" => raw_date}, _currency) do
+    # Wise always uses a matching non-ISO date in euro, so thats why we hardcode :euro as currency.
+    # Legacy TD and bunq is just ISO.
     marshal_non_iso_date_if_matches(raw_date, "-", :euro, ~r/-[[:digit:]]{4}$/)
   end
 
