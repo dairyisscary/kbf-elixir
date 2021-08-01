@@ -109,7 +109,7 @@ defmodule Kbf.Transaction.CSV do
 
   defp marshal_amount(%{"Amount" => raw_amount}, invert_amount) do
     raw_amount
-    |> String.replace("$", "")
+    |> String.replace(["$", ",", "€"], "")
     |> Float.parse()
     |> case do
       {amount, _} ->
