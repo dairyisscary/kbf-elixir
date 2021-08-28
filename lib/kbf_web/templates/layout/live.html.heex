@@ -5,10 +5,10 @@
     <% end %>
 
     <nav class="flex flex-col flex-1 p-2 space-y-2">
-      <%= nav_link "Dashboard", to: "/", icon: "activity" %>
-      <%= nav_link "Transactions", to: "/transactions", icon: "database" %>
-      <%= nav_link "Mass Import", to: "/mass-import", icon: "file-plus" %>
-      <%= nav_link "Categories", to: "/categories", icon: "layers" %>
+      <.nav_link to="/" icon= "activity">Dashboard</.nav_link>
+      <.nav_link to="/transactions" icon="database">Transactions</.nav_link>
+      <.nav_link to="/mass-import" icon="file-plus">Mass Import</.nav_link>
+      <.nav_link to="/categories" icon="layers">Categories</.nav_link>
     </nav>
   </aside>
 
@@ -39,10 +39,10 @@
   </div>
 </div>
 
-<%= flash_alerts(@flash) %>
+<.flash_alerts flash={@flash} />
 
 <%= if assigns[:edit_transaction_for_modal] do %>
-  <%= live_component @socket, KbfWeb.Transaction.EditModalComponent,
+  <%= live_component KbfWeb.Transaction.EditModalComponent,
       id: @edit_transaction_for_modal.id || "new_transaction",
       categories: @edit_modal_categories,
       transaction: @edit_transaction_for_modal %>

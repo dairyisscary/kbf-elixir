@@ -1,27 +1,32 @@
-<%= html_component "modal.html", backdrop_attrs: [phx_target: @myself, phx_click: :cancel], post_script: unless(@delete_modal_open, do: KbfWeb.LayoutView.flash_alerts(@flash)) do %>
-  <%= form = form_for @changeset, "#", [phx_target: @myself, phx_change: :validate, phx_submit: :save] %>
+<div>
+<%=
+  post_script = unless(@delete_modal_open, do: KbfWeb.LayoutView.flash_alerts(%{flash: @flash}))
+
+  html_component "modal.html",
+  backdrop_attrs: [phx_target: @myself, phx_click: :cancel],
+  post_script: post_script do %>
+
+  <%= form_for @changeset, "#", [phx_target: @myself, phx_change: :validate, phx_submit: :save], fn form -> %>
     <div class="px-6 pt-5">
       <%= html_component "sub_header.html", content: "Edit Transaction" %>
 
-      <%= html_component "form_row.html", form: form, field: :description do %>
+      <.form_row form={form} field={:description}>
         <%= text_input form, :description %>
-      <% end %>
+      </.form_row>
 
-      <%= html_component "form_row.html", form: form, field: :amount do %>
+      <.form_row form={form} field={:amount}>
         <%= number_input form, :amount %>
-      <% end %>
+      </.form_row>
 
       <%= html_component "currency_form_row.html", form: form, field: :currency %>
 
-      <%= html_component "form_row.html", form: form, field: :when do %>
+      <.form_row form={form} field={:when}>
         <%= date_input form, :when %>
-      <% end %>
+      </.form_row>
 
-      <%= html_component "form_row.html", form: form, field: :categories do %>
-        <%= category_input(@all_categories, @selected_categories, fn opts ->
-          Keyword.merge(opts, phx_target: @myself, phx_click: :update_selected_categories)
-        end) %>
-      <% end %>
+      <.form_row form={form} field={:categories}>
+        <.category_input categories={@all_categories} selected={@selected_categories} opts_fn={fn opts -> Keyword.merge(opts, phx_target: @myself, phx_click: :update_selected_categories) end} />
+      </.form_row>
     </div>
     <div class="bg-gray-100 space-x-4 px-6 py-5 flex items-center justify-end">
       <%= if @transaction.id do %>
@@ -30,11 +35,12 @@
       <%= html_component "button.html", phx_target: @myself, phx_click: :cancel, do: "Cancel" %>
       <%= html_component "button.html", type: :submit, button_style: :confirm, phx_disable_with: "Saving...", do: "Save" %>
     </div>
-  </form>
+  <% end %>
+
 <% end %>
 
 <%= if @delete_modal_open do %>
-  <%= html_component "modal.html", backdrop_attrs: [phx_click: :cancel_delete_modal], post_script: KbfWeb.LayoutView.flash_alerts(@flash) do %>
+  <%= html_component "modal.html", backdrop_attrs: [phx_click: :cancel_delete_modal], post_script: KbfWeb.LayoutView.flash_alerts(%{flash: @flash}) do %>
     <div class="px-6 py-5">
       <%= html_component "sub_header.html", content: "Are you sure you want to delete \"#{@transaction.description}\"" %>
       <p>This cannot be undone.</p>
@@ -45,3 +51,4 @@
     </footer>
   <% end %>
 <% end %>
+</div>

@@ -1,5 +1,5 @@
 defmodule KbfWeb.Transaction do
-  use KbfWeb.HTML
+  use Phoenix.Component
 
   import KbfWeb.ComponentHelpers
 
@@ -13,20 +13,16 @@ defmodule KbfWeb.Transaction do
     sum_format_with_filter(transcations, &(&1.amount < 0), currency)
   end
 
-  def dash_pill(content, opts, do: block) do
-    dash_pill(content, Keyword.merge(opts, do: block))
-  end
-
-  def dash_pill(content, icon_name: icon_name, do: block) do
-    ~E"""
+  def dash_pill(assigns) do
+    ~H"""
     <div class="p-4 transition-shadow border rounded-lg shadow-sm hover:shadow-lg">
       <div class="flex space-x-2 items-start justify-between">
         <div class="flex flex-col space-y-2">
-          <h4 class="text-gray-500"><%= content %></h4>
-          <span class="text-lg font-semibold"><%= block %></span>
+          <h4 class="text-gray-500"><%= @title %></h4>
+          <span class="text-lg font-semibold"><%= render_block(@inner_block) %></span>
         </div>
         <div class="p-8 bg-gray-200 rounded-md">
-          <%= html_component "icon.html", name: icon_name %>
+          <%= html_component "icon.html", name: @icon %>
         </div>
       </div>
     </div>
@@ -55,6 +51,6 @@ defmodule KbfWeb.Transaction do
       |> Enum.sum()
       |> KbfWeb.Format.format_currency(currency)
 
-    content_tag(:div, do: sum)
+    Phoenix.HTML.Tag.content_tag(:div, do: sum)
   end
 end

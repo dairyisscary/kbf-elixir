@@ -1,7 +1,7 @@
 <%= html_component "main_content_header.html", content: "All Transactions" %>
 
 <div class="flex flex-col">
-  <%= f = form_for :filters, "#", [class: "mb-10", phx_submit: :filter_transactions] %>
+  <%= form_for :filters, "#", [class: "mb-10", phx_submit: :filter_transactions], fn f -> %>
     <div class="flex items-center space-x-4">
 
       <%= label f, :after, "On or After:", class: "text-gray-500" %>
@@ -34,11 +34,11 @@
 
       <%= html_component "button.html", type: :submit, button_style: :confirm, do: "Search" %>
     </div>
-  </form>
+  <% end %>
 
   <div class="flex space-x-6">
     <div class="flex-1">
-      <%= live_component @socket, KbfWeb.Transaction.TableComponent, transactions: @transactions %>
+      <%= live_component KbfWeb.Transaction.TableComponent, transactions: @transactions %>
     </div>
 
     <aside class="space-y-4 w-52">

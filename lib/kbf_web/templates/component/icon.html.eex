@@ -1,3 +1,0 @@
-<svg class="kbf-icon <%= assigns[:class] || "w-6 h-6" %>">
-  <use xlink:href="/icon-sprite.svg#<%= @name %>"/>
-</svg>

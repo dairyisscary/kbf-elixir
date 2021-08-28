@@ -1,5 +1,5 @@
 defmodule KbfWeb.HTML.Form do
-  import Phoenix.HTML, only: [sigil_E: 2]
+  use Phoenix.Component
 
   def number_input(form, field, opts \\ []) do
     a11y_opts =
@@ -23,28 +23,28 @@ defmodule KbfWeb.HTML.Form do
     Phoenix.HTML.Form.date_input(form, field, add_default_attributes(opts))
   end
 
-  def radio_button_with_label(form, field, value, opts \\ [], do: block) do
-    Phoenix.HTML.Form.label class: "cursor-pointer inline-flex items-center space-x-2" do
-      ~E"""
-        <%= Phoenix.HTML.Form.radio_button(form, field, value, opts) %>
-        <span><%= block %></span>
-      """
-    end
+  def radio_button_with_label(assigns) do
+    ~H"""
+    <%= Phoenix.HTML.Form.radio_button(@form, @field, @value, @opts || []) %>
+    <span><%= render_block(@inner_block) %></span>
+    """
   end
 
-  def category_input(all_categories, selected, opts_fn) do
-    Phoenix.HTML.Tag.content_tag :div, class: "flex flex-wrap gap-2" do
-      for category <- all_categories do
-        KbfWeb.ComponentHelpers.html_component(
+  def category_input(assigns) do
+    ~H"""
+    <div class="flex flex-wrap gap-2">
+      <%= for category <- @categories do %>
+        <%= KbfWeb.ComponentHelpers.html_component(
           "category_pill.html",
-          opts_fn.(
+          @opts_fn.(
             category: category,
             phx_value_category_id: category.id,
-            faded: !selected[category.id]
+            faded: !@selected[category.id]
           )
-        )
-      end
-    end
+        ) %>
+      <% end %>
+    </div>
+    """
   end
 
   def error_tags(form, field) do
@@ -59,6 +59,33 @@ defmodule KbfWeb.HTML.Form do
         phx_feedback_for: feedback_for
       )
     end)
+  end
+
+  def form_row(assigns) do
+    ~H"""
+    <div class="kbf-form-row mb-5">
+      <%= if assigns[:label_do] do %>
+        <%= Phoenix.HTML.Form.label(@form, @field, @label_do, class: "text-sm font-medium mb-2") %>
+      <% else %>
+        <%= Phoenix.HTML.Form.label(@form, @field, class: "text-sm font-medium mb-2") %>
+      <% end %>
+      <%= render_slot(@inner_block) %>
+      <%= error_tags(@form, @field) %>
+    </div>
+    """
+  end
+
+  def checkbox_form_row(assigns) do
+    ~H"""
+    <div class="kbf-form-row mb-5">
+      <%= Phoenix.HTML.Form.label(@form, @field, class: "cursor-pointer flex items-center text-sm font-medium mb-2") do %>
+        <%= Phoenix.HTML.Form.checkbox(@form, @field) %>
+        <span class="ml-2">
+          <%= render_slot(@inner_block) %>
+        </span>
+      <% end %>
+    </div>
+    """
   end
 
   defp add_default_attributes(attrs) do

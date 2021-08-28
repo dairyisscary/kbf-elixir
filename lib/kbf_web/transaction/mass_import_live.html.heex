@@ -1,31 +1,29 @@
 <%= html_component "main_content_header.html", content: "Mass Import Transactions from CSV" %>
 
 <div class="flex space-x-6 pt-6 px-6">
-  <%= form = form_for @mass_import_changeset, "#", [as: :form_data, phx_change: :validate, phx_submit: :add_transactions, class: "flex-1"] %>
-    <%= html_component "form_row.html", form: form, label_do: "CSV", field: :csv_content do %>
+  <%= form_for @mass_import_changeset, "#", [as: :form_data, phx_change: :validate, phx_submit: :add_transactions, class: "flex-1"], fn form -> %>
+    <.form_row form={form} field={:csv_content} label_do="CSV">
       <%= textarea form, :csv_content, class: "h-48" %>
-    <% end %>
+    </.form_row>
 
     <%= html_component "currency_form_row.html", form: form, field: :currency %>
 
-    <%= html_component "form_row.html", form: form, field: :categories, label_do: "Add These Categories to All Imports" do %>
-      <%= category_input(@all_categories, @selected_categories, fn opts ->
-        Keyword.merge(opts, phx_click: :update_selected_categories)
-      end) %>
-    <% end %>
+    <.form_row form={form} field={:categories} label_do="Add These Categories to All Imports">
+      <.category_input categories={@all_categories} selected={@selected_categories} opts_fn={fn opts -> Keyword.merge(opts, phx_click: :update_selected_categories) end} />
+    </.form_row>
 
-    <%= html_component "checkbox_form_row.html", form: form, field: :exclude_credits do %>
+    <.checkbox_form_row form={form} field={:exclude_credits}>
       Exclude Credits (if you don't want to include payments)
-    <% end %>
+    </.checkbox_form_row>
 
-    <%= html_component "checkbox_form_row.html", form: form, field: :invert_amount do %>
+    <.checkbox_form_row form={form} field={:invert_amount}>
       Invert Amounts in CSV (TD Bank lists debits as positive values)
-    <% end %>
+    </.checkbox_form_row>
 
     <footer class="flex justify-end mt-5">
       <%= html_component "button.html", type: :submit, button_style: :confirm, phx_disable_with: "Importing...", do: "Import" %>
     </footer>
-  </form>
+  <% end %>
 
   <aside class="flex-1">
     <%= if @suspect_duplicates do %>

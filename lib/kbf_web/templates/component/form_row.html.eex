@@ -1,9 +1,0 @@
-<div class="kbf-form-row mb-5">
-  <%= if assigns[:label_do] do %>
-    <%= label @form, @field, @label_do, class: "text-sm font-medium mb-2" %>
-  <% else %>
-    <%= label @form, @field, class: "text-sm font-medium mb-2" %>
-  <% end %>
-  <%= assigns.do %> 
-  <%= error_tags @form, @field %>
-</div>

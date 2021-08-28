@@ -1,3 +1,0 @@
-<span class="rounded px-2 py-1 <%= if @transaction.amount >= 0, do: "bg-green-300", else: "bg-purple-300" %>">
-  <%= format_currency(@transaction.amount, @transaction.currency) %>
-</span>

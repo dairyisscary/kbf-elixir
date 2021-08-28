@@ -1,7 +1,0 @@
-<%= html_component "form_row.html", form: @form, field: @field do %>
-  <div class="flex items-center space-x-5">
-    <%= for radio <- @radios do %>
-      <%= radio_button_with_label @form, @field, radio[:value], radio[:opts] || [], do: radio[:do] %>
-    <% end %>
-  </div>
-<% end %>

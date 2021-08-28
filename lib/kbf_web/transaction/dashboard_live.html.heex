@@ -1,18 +1,22 @@
 <%= html_component "main_content_header.html", content: "Dashboard" %>
 
 <section class="grid grid-cols-1 gap-5 mb-6 sm:grid-cols-2 lg:grid-cols-4">
-  <%= dash_pill "Recent Transactions", icon_name: "clock", do: length(@recent_transactions) |> format_int() %>
-  <%= dash_pill "Recent Spend", icon_name: "dollar-sign" do %>
+  <.dash_pill title="Recent Transactions" icon="clock">
+    <%= length(@recent_transactions) |> format_int() %>
+  </.dash_pill>
+  <.dash_pill title="Recent Spend" icon="dollar-sign">
     <%= @recent_transactions |> transaction_sum_spend(:euro) %>
     <%= @recent_transactions |> transaction_sum_spend(:usd) %>
-  <% end %>
-  <%= dash_pill "Recent Income", icon_name: "dollar-sign" do %>
+  </.dash_pill>
+  <.dash_pill title="Recent Income" icon="dollar-sign">
     <%= @recent_transactions |> transaction_sum_income(:euro) %>
     <%= @recent_transactions |> transaction_sum_income(:usd) %>
-  <% end %>
-  <%= dash_pill "Total Transactions", icon_name: "layers", do: @total_transaction_count %>
+  </.dash_pill>
+  <.dash_pill title="Total Transactions" icon="layers">
+    <%= @total_transaction_count %>
+  </.dash_pill>
 </section>
 
 <%= html_component "sub_header.html", content: "Recent Transactions" %>
 
-<%= live_component @socket, KbfWeb.Transaction.TableComponent, transactions: @recent_transactions %>
+<%= live_component KbfWeb.Transaction.TableComponent, transactions: @recent_transactions %>

@@ -4,19 +4,18 @@
       <%= html_component "main_logo.html", text: "Kbf Login" %>
     </header>
 
-    <%= form = form_for(
-      @changeset,
+    <%= form_for @changeset,
       Routes.account_path(@socket, :start_session),
-      [phx_submit: :attempt_login, phx_trigger_action: @trigger_submit, class: "bg-white w-full px-6 py-5 shadow rounded-md"]
-      )
-    %>
-      <%= html_component "form_row.html", form: form, field: :username do %>
-        <%= text_input form, :username, autofocus: "" %>
-      <% end %>
+      [phx_submit: :attempt_login, phx_trigger_action: @trigger_submit, class: "bg-white w-full px-6 py-5 shadow rounded-md"],
+      fn form -> %>
 
-      <%= html_component "form_row.html", form: form, field: :password do %>
+      <.form_row form={form} field={:username}>
+        <%= text_input form, :username, autofocus: "" %>
+      </.form_row>
+
+      <.form_row form={form} field={:password}>
         <%= text_input form, :password, type: "password" %>
-      <% end %>
+      </.form_row>
 
       <footer class="space-x-4 flex items-center justify-end">
         <%= html_component "button.html",
@@ -27,6 +26,6 @@
           do: if @trigger_submit, do: "Working...", else: "Login"
         %>
       </footer>
-    </form>
+    <% end %>
   </div>
 </div>

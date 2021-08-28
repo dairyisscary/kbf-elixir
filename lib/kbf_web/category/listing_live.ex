@@ -187,8 +187,8 @@ defmodule KbfWeb.Category.ListingLive do
     end)
   end
 
-  defp header_with_add_button() do
-    ~E"""
+  defp header_with_add_button(assigns) do
+    ~H"""
     <span class="flex items-center justify-between">
       <span>Manage Categories</span>
       <%= html_component "button.html", phx_click: :open_modal, class: "text-base space-x-1" do %>
