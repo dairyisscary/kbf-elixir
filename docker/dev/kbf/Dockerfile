@@ -1,4 +1,4 @@
-FROM elixir:1.12.2-slim
+FROM elixir:1.12.3-slim
 
 RUN apt-get update && apt-get install -y inotify-tools curl
 
