@@ -11,7 +11,7 @@ executors:
   default_env_with_db:
     working_directory: /root/kbf
     docker:
-      - image: elixir:1.11.4
+      - image: elixir:1.13.1-slim
         environment:
           MIX_ENV: test
           MIX_HOME: /root/kbf/.mix
@@ -24,7 +24,7 @@ executors:
   default_env:
     working_directory: /root/kbf
     docker:
-      - image: elixir:1.11.4
+      - image: elixir:1.13.1-slim
         environment:
           MIX_ENV: test
           MIX_HOME: /root/kbf/.mix

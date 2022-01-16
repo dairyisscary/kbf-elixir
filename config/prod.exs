@@ -1,4 +1,4 @@
-use Mix.Config
+import Config
 
 http_port = String.to_integer(System.get_env("HTTP_PORT") || "4000")
 

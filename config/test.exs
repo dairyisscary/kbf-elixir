@@ -1,4 +1,4 @@
-use Mix.Config
+import Config
 
 config :kbf, Kbf.Repo,
   username: "postgres",
