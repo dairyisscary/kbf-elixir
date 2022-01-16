@@ -16,9 +16,9 @@ RUN mix deps.get --only prod \
 
 RUN apt-get update \
   && apt-get install -y gcc g++ make curl \
-  && curl -O https://deb.nodesource.com/setup_14.x \
-  && bash setup_14.x \
-  && rm setup_14.x \
+  && curl -O https://deb.nodesource.com/setup_16.x \
+  && bash setup_16.x \
+  && rm setup_16.x \
   && apt-get install -y build-essential nodejs
 RUN npm install --only prod --prefix assets \
   && npm run deploy --prefix assets \
