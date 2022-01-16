@@ -1,7 +1,5 @@
 module.exports = {
-  mode: "jit",
-  purge: ["../lib/**/*.ex", "../lib/**/*.heex", "./js/**/*.js"],
-  darkMode: "media",
+  content: ["../lib/**/*.ex", "../lib/**/*.heex", "./js/**/*.js"],
   theme: {
     extend: {
       keyframes: {
@@ -19,11 +17,6 @@ module.exports = {
       animation: {
         "fade-in-down": "fade-in-down 0.3s ease-out forwards",
       },
-    },
-  },
-  variants: {
-    extend: {
-      backgroundColor: ["even"],
     },
   },
   plugins: [require("@tailwindcss/forms")],
