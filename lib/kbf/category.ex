@@ -4,7 +4,8 @@ defmodule Kbf.Category do
   import Ecto.Query
   alias Kbf.Repo
 
-  @default_select [:id, :name, :color_code]
+  @uncategorized_id "uncategorized"
+  @default_select [:id, :name, :color_code, :ignored_for_breakdown_reporting]
   @max_color_code 11
 
   @primary_key {:id, :binary_id, autogenerate: true}
@@ -12,15 +13,26 @@ defmodule Kbf.Category do
   schema "categories" do
     field :name, :string
     field :color_code, :integer, default: 0
+    field :ignored_for_breakdown_reporting, :boolean, default: false
     field :transaction_count, :integer, virtual: true
 
     timestamps()
   end
 
+  def uncategorized(attrs \\ %{}) do
+    %Kbf.Category{
+      id: @uncategorized_id,
+      name: "Uncategorized",
+      color_code: -1,
+      ignored_for_breakdown_reporting: false
+    }
+    |> Map.merge(attrs)
+  end
+
   @doc false
   def changeset(category, attrs) do
     category
-    |> cast(attrs, [:name, :color_code])
+    |> cast(attrs, [:name, :color_code, :ignored_for_breakdown_reporting])
     |> validate_required([:name, :color_code])
     |> validate_number(:color_code,
       greater_than_or_equal_to: 0,

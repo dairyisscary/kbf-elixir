@@ -1,4 +1,8 @@
 defmodule KbfWeb.Format do
+  def format_currency_name(:usd), do: "$ USD"
+
+  def format_currency_name(:euro), do: "€ Euro"
+
   def format_currency(number, :euro) do
     Number.Currency.number_to_currency(number, unit: "€", separator: ",", delimiter: ".")
   end

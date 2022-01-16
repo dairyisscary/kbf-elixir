@@ -29,7 +29,7 @@ defmodule KbfWeb.Transaction.TableComponent do
         """,
         ~H"""
         <div class="flex justify-end mr-6">
-          <%= html_component("currency_pill.html", transaction: transaction) %>
+          <%= html_component("currency_pill.html", amount: transaction.amount, currency: transaction.currency) %>
         </div>
         """
       ]

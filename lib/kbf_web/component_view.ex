@@ -11,6 +11,19 @@ defmodule KbfWeb.ComponentView do
     |> Map.to_list()
   end
 
+  def table_th(%{do: inner_do} = content_opts, is_heading) do
+    opts =
+      content_opts
+      |> Map.to_list()
+      |> table_th_opts(is_heading)
+
+    Phoenix.HTML.Tag.content_tag(:th, opts, do: inner_do)
+  end
+
+  def table_th(content, is_heading) do
+    Phoenix.HTML.Tag.content_tag(:th, table_th_opts([], is_heading), do: content)
+  end
+
   def table_tr_opts(row_opts) do
     row_opts
     |> attrs_with_class_default("transition-all hover:bg-gray-100")
@@ -37,4 +50,17 @@ defmodule KbfWeb.ComponentView do
     do: "border-transparent bg-red-600 text-gray-100 hover:bg-red-700"
 
   defp button_style_classes(_style), do: "bg-white border-gray-300 hover:bg-gray-50"
+
+  defp table_th_opts(opts, is_heading) do
+    opts
+    |> Keyword.put(:scope, "col")
+    |> Keyword.delete(:do)
+    |> attrs_with_class_default(
+      if is_heading do
+        "pl-6 py-3 text-xs font-medium tracking-wider uppercase text-left text-gray-500"
+      else
+        "pl-6 py-3 font-medium text-left"
+      end
+    )
+  end
 end

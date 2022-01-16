@@ -37,6 +37,10 @@
             %>
           </div>
         </.form_row>
+
+        <.checkbox_form_row form={form} field={:ignored_for_breakdown_reporting}>
+          Exclude this category from breakdown reporting
+        </.checkbox_form_row>
       </div>
       <footer class="bg-gray-100 space-x-4 px-6 py-5 flex items-center justify-end">
         <%= if editing_category do %>

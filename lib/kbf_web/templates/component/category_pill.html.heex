@@ -1,3 +1,1 @@
-<%= content_tag :span, category_pill_opts(assigns) do %>
-  <%= content_tag :span, @category.name %>
-<% end %>
+<%= content_tag :span, category_pill_opts(assigns), do: @category.name %>

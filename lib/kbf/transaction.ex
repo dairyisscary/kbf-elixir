@@ -169,6 +169,10 @@ defmodule Kbf.Transaction do
     dynamic([t], ^dynamic and t.when >= ^after_date)
   end
 
+  defp get_where_from_pair({:ignored_ids, ignored_ids}, dynamic) when is_list(ignored_ids) do
+    dynamic([t], ^dynamic and t.id not in ^ignored_ids)
+  end
+
   defp get_where_from_pair(_, dynamic), do: dynamic
 
   defp category_filter(transactions, nil), do: transactions

@@ -1,0 +1,44 @@
+<%= html_component "main_content_header.html", content: "Breakdown" %>
+
+<%= form_for :filters, "#", [class: "mb-10", phx_submit: :filter_transactions], fn f -> %>
+  <div class="flex items-center space-x-4">
+    <%= label f, :after, "On or After:", class: "text-gray-500" %>
+    <%= date_input f, :after, value: @filters[:after], class: "w-48" %>
+
+    <%= label f, :before, "On or Before:", class: "text-gray-500" %>
+    <%= date_input f, :before, value: @filters[:before], class: "w-48" %>
+
+    <%= label f, :ignore_transaction_ids, "Ignore TX IDs", class: "text-gray-500" %>
+    <%= text_input f, :ignore_transaction_ids,
+      placeholder: "Ex: ABC-123, DEF-zxy",
+      value: @filters[:ignore_transaction_ids],
+      class: "w-48" %>
+
+    <div class="flex-1"></div>
+
+    <%= html_component "button.html", type: :submit, button_style: :confirm, do: "Crunch Numbers" %>
+  </div>
+<% end %>
+
+<div class="space-y-14">
+  <%= for {currency, {category_accums, grand_total, max_total}} <- @currency_breakdowns do %>
+    <section id={"breakdown-section-#{currency}"}>
+      <h3 class="mb-5 text-xl">
+        <%= format_currency_name(currency) %>
+      </h3>
+      <%= html_component "table.html",
+        headings: [%{do: "Category", width: "55%"}, %{do: "Percentage", width: "10%"}, %{do: "Tx Count", width: "10%"}, %{do: "Total", width: "25%"}],
+        empty: nil,
+        footer: [
+          %{do: "Total"},
+          "",
+          "",
+          %{do: total_badge(%{total: grand_total}, currency)}
+        ],
+        rows:
+          category_accums
+          |> Enum.map(fn breakdown -> row(breakdown, currency, max_total, grand_total) end)
+      %>
+    </section>
+  <% end %>
+</div>

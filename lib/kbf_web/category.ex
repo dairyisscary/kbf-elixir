@@ -61,6 +61,10 @@ defmodule KbfWeb.Category do
       1 ->
         "bg-yellow-600"
 
+      -1 ->
+        # uncategorized
+        "bg-gray-400"
+
       _ ->
         "bg-yellow-300"
     end
