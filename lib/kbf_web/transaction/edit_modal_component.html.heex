@@ -8,7 +8,7 @@
 
   <%= form_for @changeset, "#", [phx_target: @myself, phx_change: :validate, phx_submit: :save], fn form -> %>
     <div class="px-6 pt-5">
-      <%= html_component "sub_header.html", content: "Edit Transaction" %>
+      <%= html_component "sub_header.html", content: if @transaction.id, do: "Edit Transaction", else: "Add Transaction" %>
 
       <.form_row form={form} field={:description}>
         <%= text_input form, :description %>

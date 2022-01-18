@@ -13,7 +13,7 @@
 
     <%= form_for @edit_modal_changeset, "#", [phx_change: :validate, phx_submit: :save_category], fn form -> %>
       <div class="px-6 pt-5">
-        <%= html_component "sub_header.html", content: "Add Category" %>
+        <%= html_component "sub_header.html", content: if editing_category, do: "Edit Category", else: "Add Category" %>
 
         <.form_row form={form} field={:name}>
           <%= text_input form, :name %>
