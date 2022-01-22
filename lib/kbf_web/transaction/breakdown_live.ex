@@ -97,18 +97,13 @@ defmodule KbfWeb.Transaction.BreakdownLive do
     if grand_total >= 0, do: percent * -1, else: percent
   end
 
-  defp pill_for_category(%{total: total} = assigns, _) when total >= 0 do
-    ~H"""
-    <%= html_component "category_pill.html", category: @category %>
-    """
-  end
-
   defp pill_for_category(%{total: total} = assigns, max_total) do
+    color = if total > 0, do: "", else: " bg-purple-400"
+
     ~H"""
-    <%= html_component "category_pill.html",
-      category: @category,
-      class: "block",
-      style: "width:#{get_width_category(total, max_total)}%" %>
+    <div class={"flex p-2 rounded#{color}"} style={"width:#{get_width_category(total, max_total)}%"}>
+      <%= html_component "category_pill.html", category: @category %>
+    </div>
     """
   end
 
