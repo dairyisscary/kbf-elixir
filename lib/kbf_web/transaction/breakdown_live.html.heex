@@ -37,7 +37,7 @@
         ],
         rows:
           category_accums
-          |> Enum.map(fn breakdown -> row(breakdown, currency, max_total, grand_total) end)
+          |> Enum.map(fn breakdown -> row(breakdown, @socket, @filters, currency, max_total, grand_total) end)
       %>
     </section>
   <% end %>

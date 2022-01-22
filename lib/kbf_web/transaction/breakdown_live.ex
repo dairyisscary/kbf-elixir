@@ -49,7 +49,7 @@ defmodule KbfWeb.Transaction.BreakdownLive do
         {currency, accums}
       end)
 
-    assign(socket, currency_breakdowns: currency_breakdowns)
+    assign(socket, :currency_breakdowns, currency_breakdowns)
   end
 
   defp get_category_for_transaction(%Kbf.Transaction{categories: categories}) do
@@ -77,11 +77,11 @@ defmodule KbfWeb.Transaction.BreakdownLive do
     |> Map.update!(:total, &(&1 + transaction.amount))
   end
 
-  defp row(%{count: count} = assigns, currency, max_total, grand_total) do
+  defp row(%{count: count} = assigns, socket, filters, currency, max_total, grand_total) do
     [
       class: "even:bg-gray-50",
       do: [
-        pill_for_category(assigns, max_total),
+        pill_for_category(assigns, socket, filters, max_total),
         "#{percentage_of_grand(assigns, grand_total)}%",
         count,
         total_badge(assigns, currency)
@@ -97,12 +97,28 @@ defmodule KbfWeb.Transaction.BreakdownLive do
     if grand_total >= 0, do: percent * -1, else: percent
   end
 
-  defp pill_for_category(%{total: total} = assigns, max_total) do
-    color = if total > 0, do: "", else: " bg-purple-400"
+  defp pill_for_category(%{total: total} = assigns, socket, filters, max_total) do
+    classes = if total > 0, do: "py-2", else: "p-2 bg-purple-400"
 
     ~H"""
-    <div class={"flex p-2 rounded#{color}"} style={"width:#{get_width_category(total, max_total)}%"}>
+    <div class={"flex items-center space-x-2 rounded #{classes}"} style={"width:#{get_width_category(total, max_total)}%"}>
       <%= html_component "category_pill.html", category: @category %>
+      <%=
+        unless Kbf.Category.uncategorized?(@category) do
+          params = %{
+            init_filters: %{
+              before: filters[:before] |> format_iso_date(),
+              after: filters[:after] |> format_iso_date(),
+              categories: %{} |> Map.put(@category.id, "true"),
+            }
+            |> Enum.filter(fn {_key, value} -> value end)
+          }
+          to = Routes.live_path(socket, KbfWeb.Transaction.ListingLive, params)
+          live_patch to: to do
+            html_component "icon.html", name: "link", class: "w-4 h-4 text-blue-800"
+          end
+        end
+      %>
     </div>
     """
   end

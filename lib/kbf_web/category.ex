@@ -1,7 +1,13 @@
 defmodule KbfWeb.Category do
   use KbfWeb.HTML
 
-  def color_classes_for(%Kbf.Category{color_code: color_code}), do: color_class_lookup(color_code)
+  def color_classes_for(%Kbf.Category{} = category) do
+    if Kbf.Category.uncategorized?(category) do
+      "bg-gray-400"
+    else
+      color_class_lookup(category.color_code)
+    end
+  end
 
   def all_bg_color_classes(opts_fn) do
     Kbf.Category.color_code_range()
@@ -60,10 +66,6 @@ defmodule KbfWeb.Category do
 
       1 ->
         "bg-yellow-600"
-
-      -1 ->
-        # uncategorized
-        "bg-gray-400"
 
       _ ->
         "bg-yellow-300"

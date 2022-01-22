@@ -19,6 +19,8 @@ defmodule Kbf.Category do
     timestamps()
   end
 
+  def uncategorized?(%Kbf.Category{id: id}), do: id === @uncategorized_id
+
   def uncategorized(attrs \\ %{}) do
     %Kbf.Category{
       id: @uncategorized_id,

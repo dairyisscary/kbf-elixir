@@ -2,7 +2,7 @@ defmodule KbfWeb.Transaction.ListingLive do
   use KbfWeb, :live_view
 
   @impl true
-  def mount(_params, session, socket) do
+  def mount(params, session, socket) do
     if connected?(socket), do: Kbf.Transaction.subscribe()
 
     socket =
@@ -11,7 +11,12 @@ defmodule KbfWeb.Transaction.ListingLive do
         page_title: "All Transactions",
         user: KbfWeb.Session.get_user_from_socket_session!(session),
         all_categories: Kbf.Category.all_by_name(),
-        filters: %{after: Kbf.Calendar.days_ago(30), categories: %{}}
+        filters:
+          if params["init_filters"] do
+            parse_filters(params["init_filters"])
+          else
+            %{after: Kbf.Calendar.days_ago(30), categories: %{}}
+          end
       )
       |> transactions_from_filters()
 
@@ -115,7 +120,8 @@ defmodule KbfWeb.Transaction.ListingLive do
   defp parse_filters(%{} = filters) do
     %{
       categories:
-        filters["categories"]
+        filters
+        |> Map.get("categories", %{})
         |> Enum.filter(fn {_id, value} -> value == "true" end)
         |> Enum.into(%{}, fn {id, _value} -> {id, true} end),
       before: Kbf.Calendar.parse_date(filters["before"]),

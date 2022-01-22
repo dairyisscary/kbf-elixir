@@ -14,4 +14,8 @@ defmodule KbfWeb.Format do
   def format_date(nil), do: ""
 
   def format_date(date), do: Calendar.strftime(date, "%d %b %Y")
+
+  def format_iso_date(nil), do: ""
+
+  def format_iso_date(date), do: Calendar.strftime(date, "%Y-%m-%d")
 end
