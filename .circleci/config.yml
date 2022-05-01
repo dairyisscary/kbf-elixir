@@ -16,7 +16,7 @@ executors:
           MIX_ENV: test
           MIX_HOME: /root/kbf/.mix
           DB_HOST: localhost
-      - image: postgres:14.1
+      - image: postgres:14.2
         environment:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
