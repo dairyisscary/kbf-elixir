@@ -20,7 +20,7 @@ RUN apt-get update \
   && bash setup_16.x \
   && rm setup_16.x \
   && apt-get install -y build-essential nodejs
-RUN npm install --only prod --prefix assets \
+RUN npm install --omit=dev --prefix assets \
   && npm run deploy --prefix assets \
   && mix phx.digest
 
