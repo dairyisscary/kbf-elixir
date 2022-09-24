@@ -18,7 +18,7 @@ services:
     ports:
       - "4001:5432"
     volumes:
-      - "/Users/eric/kbf-prod-data:/var/lib/postgresql/data"
+      - "/Users/eric.butler/kbf-prod-data:/var/lib/postgresql/data"
 
   kbf:
     build:
