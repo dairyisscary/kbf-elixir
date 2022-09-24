@@ -6,9 +6,9 @@ defmodule KbfWeb.LayoutView do
 
   def nav_link(assigns) do
     ~H"""
-    <%= live_patch to: @to, class: "flex items-center transition-colors space-x-2 p-2 rounded-md hover:bg-gray-100" do %>
-      <%= html_component "icon.html", name: @icon, class: "w-6 h-6 text-gray-400" %><span><%= render_block(@inner_block) %></span>
-    <% end %>
+    <.link patch={@to} class="flex items-center transition-colors space-x-2 p-2 rounded-md hover:bg-gray-100">
+      <%= html_component "icon.html", name: @icon, class: "w-6 h-6 text-gray-400" %><span><%= render_slot(@inner_block) %></span>
+    </.link>
     """
   end
 
@@ -48,21 +48,21 @@ defmodule KbfWeb.LayoutView do
   end
 
   def live_assign_edit_modal(socket, %{categories: categories, transaction: transaction}) do
-    Phoenix.LiveView.assign(socket, %{
+    Phoenix.Component.assign(socket, %{
       @edit_modal_key => transaction,
       @edit_modal_categories_key => categories
     })
   end
 
   def live_assign_add_modal(socket, %{categories: categories}) do
-    Phoenix.LiveView.assign(socket, %{
+    Phoenix.Component.assign(socket, %{
       @edit_modal_key => Kbf.Transaction.new(),
       @edit_modal_categories_key => categories
     })
   end
 
   def live_unassign_edit_modal(socket) do
-    Phoenix.LiveView.assign(socket, %{@edit_modal_key => nil, @edit_modal_categories_key => nil})
+    Phoenix.Component.assign(socket, %{@edit_modal_key => nil, @edit_modal_categories_key => nil})
   end
 
   def put_temporary_flash(socket, flash_kind, flash_message, proc_message) do
