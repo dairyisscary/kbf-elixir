@@ -1,6 +1,5 @@
 defmodule KbfWeb.Router do
   use KbfWeb, :router
-  import Phoenix.LiveDashboard.Router
 
   pipeline :browser do
     plug :accepts, ["html"]
@@ -35,6 +34,5 @@ defmodule KbfWeb.Router do
     live "/mass-import", Transaction.MassImportLive
     live "/categories", Category.ListingLive
     post "/end-session", Account.Controller, :end_session, as: :account
-    live_dashboard "/metrics", metrics: KbfWeb.Telemetry
   end
 end
