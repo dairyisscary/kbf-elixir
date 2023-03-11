@@ -12,6 +12,6 @@ config :kbf, KbfWeb.Endpoint,
 
 config :kbf, Kbf.Repo, pool_size: String.to_integer(System.get_env("DB_POOL_SIZE") || "20")
 
-config :logger, level: :info
+config :logger, level: :notice
 
 import_config "prod.secret.exs"
